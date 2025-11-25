@@ -9,6 +9,7 @@ import HuaweicloudApi from '~/apis/delete/huaweiyun'
 import ImgurApi from '~/apis/delete/imgur'
 import LocalApi from '~/apis/delete/local'
 import LskyplistApi from '~/apis/delete/lskyplist'
+import EasyImagesApi from '~/apis/delete/easyimages'
 import PiclistApi from '~/apis/delete/piclist'
 import QiniuApi from '~/apis/delete/qiniu'
 import SftpPlistApi from '~/apis/delete/sftpplist'
@@ -29,6 +30,7 @@ const apiMap: IStringKeyMap = {
   imgur: ImgurApi,
   local: LocalApi,
   lskyplist: LskyplistApi,
+  easyimages: EasyImagesApi,
   piclist: PiclistApi,
   qiniu: QiniuApi,
   sftpplist: SftpPlistApi,

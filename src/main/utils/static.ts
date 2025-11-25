@@ -15,6 +15,7 @@ export const picBedsCanbeDeleted = [
   'imgur',
   'local',
   'lskyplist',
+  'easyimages',
   'piclist',
   'qiniu',
   'sftpplist',

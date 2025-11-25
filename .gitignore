@@ -30,3 +30,8 @@ desktop.ini
 /dist
 /out
 /release
+
+# user files
+.history
+.trae
+.yarn
