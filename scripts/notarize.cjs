@@ -2,7 +2,6 @@
 
 require('dotenv').config()
 
-const { notarize } = require('@electron/notarize')
 const { ELECTRON_SKIP_NOTARIZATION, XCODE_APP_LOADER_EMAIL, XCODE_APP_LOADER_PASSWORD, XCODE_TEAM_ID } = process.env
 
 async function main(context) {
@@ -20,6 +19,7 @@ async function main(context) {
   }
 
   console.log('Starting Apple notarization.')
+  const { notarize } = await import('@electron/notarize')
   const appName = context.packager.appInfo.productFilename
   await notarize({
     appBundleId: 'com.kuingsmile.piclist',

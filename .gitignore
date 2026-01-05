@@ -31,20 +31,16 @@ test.js
 scripts/*.yml
 scripts/generateYmlFile.js
 .yarnrc
-#Electron-builder output
-/dist_electron
-/docs
-cloc.exe
-desktop.ini
-/dist
-/out
-/release
-
-# user files
-.history
-.trae
-.yarn
-
 remote-notice.json
 cloc*.exe
 !.gitkeep
+
+.trae
+.history
+
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
