@@ -1,16 +1,8 @@
-import type { ServerResponse } from 'node:http'
+type IObj = Record<string, any>
 
-import type { PicGo } from 'piclist'
+type IObjT<T> = Record<string, T>
 
-export interface IObj {
-  [propName: string]: any
-}
-
-export interface IObjT<T> {
-  [propName: string]: T
-}
-
-export interface ErrnoException extends Error {
+interface ErrnoException extends Error {
   errno?: number | string
   code?: string
   path?: string
@@ -18,19 +10,17 @@ export interface ErrnoException extends Error {
   stack?: string
 }
 
-export type ILogType = 'success' | 'info' | 'warn' | 'error'
-
 // Server
-export type IHttpResponse = ServerResponse
+type IHttpResponse = import('node:http').ServerResponse
 
-export interface IServerCTX {
+interface IServerCTX {
   response: IHttpResponse
   [propName: string]: any
 }
 
-export type routeHandler = (ctx: IServerCTX) => Promise<void>
+type routeHandler = (ctx: IServerCTX) => Promise<void>
 
-export interface IServerConfig {
+interface IServerConfig {
   port: number | string
   host: string
   enable: boolean
@@ -38,7 +28,7 @@ export interface IServerConfig {
 
 // Sync
 
-export interface ISyncConfig {
+interface ISyncConfig {
   type: string
   file?: string
   username: string
@@ -58,7 +48,7 @@ export interface ISyncConfig {
 }
 
 // Image && PicBed
-export interface ImgInfo {
+interface ImgInfo {
   buffer?: Buffer
   base64Image?: string
   fileName?: string
@@ -71,20 +61,20 @@ export interface ImgInfo {
   [propName: string]: any
 }
 
-export interface IGalleryItem extends ImgInfo {
+interface IGalleryItem extends ImgInfo {
   src: string
   key: string
   intro: string
 }
 
-export interface IPicBedType {
+interface IPicBedType {
   type: string
   name: string
   visible: boolean
 }
 
 // Config Settings
-export interface IShortKeyConfig {
+interface IShortKeyConfig {
   enable: boolean
   key: string // 按键
   name: string
@@ -92,28 +82,22 @@ export interface IShortKeyConfig {
   from?: string
 }
 
-export interface IPluginShortKeyConfig {
+interface IPluginShortKeyConfig {
   key: string
   name: string
   label: string
   handle: IShortKeyHandler
 }
 
-export interface IShortKeyConfigs {
-  [propName: string]: IShortKeyConfig
-}
+type IShortKeyConfigs = Record<string, IShortKeyConfig>
 
-export interface IOldShortKeyConfigs {
-  upload: string
-}
-
-export interface IKeyCommandType {
+interface IKeyCommandType {
   key: string
   command: string
 }
 
 // Main process
-export interface IBrowserWindowOptions {
+interface IBrowserWindowOptions {
   height: number
   width: number
   show: boolean
@@ -142,19 +126,19 @@ export interface IBrowserWindowOptions {
   [propName: string]: any
 }
 
-export interface IFileWithPath {
+interface IFileWithPath {
   path: string
   name?: string
 }
 
-export interface IBounds {
+interface IBounds {
   x: number
   y: number
 }
 
 // PicGo Types
-export type ICtx = PicGo
-export interface IPicGoPlugin {
+type ICtx = import('piclist').PicGo
+interface IPicGoPlugin {
   name: string
   fullName: string
   author: string
@@ -169,9 +153,7 @@ export interface IPicGoPlugin {
         transformer: IPluginMenuConfig
         [index: string]: IPluginMenuConfig
       }
-    | {
-        [propName: string]: any
-      }
+    | Record<string, any>
   enabled?: boolean
   homepage: string
   guiMenu?: any[]
@@ -180,7 +162,7 @@ export interface IPicGoPlugin {
   [propName: string]: any
 }
 
-export interface IPicGoPluginConfig {
+interface IPicGoPluginConfig {
   name: string
   type: string
   required: boolean
@@ -195,7 +177,7 @@ export interface IPicGoPluginConfig {
   [propName: string]: any
 }
 
-export interface IPicGoPluginOriginConfig {
+interface IPicGoPluginOriginConfig {
   name: string
   type: string
   required: boolean
@@ -213,19 +195,13 @@ export interface IPicGoPluginOriginConfig {
   [propName: string]: any
 }
 
-export interface IPluginMenuConfig {
+interface IPluginMenuConfig {
   name: string
   fullName?: string
   config: any[]
 }
 
-export interface INPMSearchResult {
-  data: {
-    objects: INPMSearchResultObject[]
-  }
-}
-
-export interface INPMSearchResultObject {
+interface INPMSearchResultObject {
   package: {
     name: string
     scope: string
@@ -245,10 +221,10 @@ export interface INPMSearchResultObject {
   }
 }
 
-export type IDispose = () => void
+type IDispose = () => void
 
 // GuiApi
-export interface IGuiApi {
+interface IGuiApi {
   showInputBox: (options: IShowInputBoxOption) => Promise<string>
   showFileExplorer: (options: IShowFileExplorerOption) => Promise<string[]>
   upload: (input: IUploadOption) => Promise<ImgInfo[]>
@@ -256,24 +232,24 @@ export interface IGuiApi {
   showMessageBox: (options?: IShowMessageBoxOption) => Promise<IShowMessageBoxResult>
 }
 
-export interface IShowInputBoxOption {
+interface IShowInputBoxOption {
   value?: string
   title: string
   placeholder: string
   multiLine?: boolean
 }
 
-export type IShowFileExplorerOption = IObj
+type IShowFileExplorerOption = IObj
 
-export type IUploadOption = string[]
+type IUploadOption = string[]
 
-export interface IShowNotificationOption {
+interface IShowNotificationOption {
   title: string
   body: string
   // icon?: string | import('electron').NativeImage
 }
 
-export interface IPrivateShowNotificationOption extends IShowNotificationOption {
+interface IPrivateShowNotificationOption extends IShowNotificationOption {
   /**
    * click notification to copy the body
    */
@@ -282,40 +258,29 @@ export interface IPrivateShowNotificationOption extends IShowNotificationOption 
   clickFn?: () => void
 }
 
-export interface IShowMessageBoxOption {
+interface IShowMessageBoxOption {
   title: string
   message: string
   type: string
   buttons: string[]
 }
 
-export interface IShowMessageBoxResult {
+interface IShowMessageBoxResult {
   result: number
   checkboxChecked: boolean
 }
 
-export interface IShortKeyHandlerObj {
-  handle: IShortKeyHandler
-  key: string
-  label: string
-}
+type IShortKeyHandler = (ctx: ICtx, guiApi?: IGuiApi) => Promise<void | ICtx>
 
-export type IShortKeyHandler = (ctx: ICtx, guiApi?: IGuiApi) => Promise<void | ICtx>
+type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
-export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-
-export interface shortKeyHandlerMap {
-  from: string
-  handle: IShortKeyHandler
-}
-
-export interface ILocalConfig {
+interface ILocalConfig {
   path: string
   customUrl?: string
   webPath?: string
 }
 
-export interface IAliYunConfig {
+interface IAliYunConfig {
   accessKeyId: string
   accessKeySecret: string
   bucket: string
@@ -326,7 +291,7 @@ export interface IAliYunConfig {
   options?: string
 }
 
-export interface IGitHubConfig {
+interface IGitHubConfig {
   repo: string
   token: string
   path?: string
@@ -334,7 +299,7 @@ export interface IGitHubConfig {
   branch: string
 }
 
-export interface IImgurConfig {
+interface IImgurConfig {
   clientId?: string
   proxy?: string
   username?: string
@@ -342,7 +307,7 @@ export interface IImgurConfig {
   album?: string
 }
 
-export interface IQiniuConfig {
+interface IQiniuConfig {
   accessKey: string
   secretKey: string
   bucket: string
@@ -352,12 +317,12 @@ export interface IQiniuConfig {
   path?: string
 }
 
-export interface ISMMSConfig {
+interface ISMMSConfig {
   token: string
   backupDomain?: string
 }
 
-export interface ITcYunConfig {
+interface ITcYunConfig {
   secretId: string
   secretKey: string
   bucket: string
@@ -372,7 +337,7 @@ export interface ITcYunConfig {
   slim?: boolean
 }
 
-export interface IUpYunConfig {
+interface IUpYunConfig {
   bucket: string
   operator: string
   password: string
@@ -384,7 +349,7 @@ export interface IUpYunConfig {
   endpoint?: string
 }
 
-export interface IWebdavPlistConfig {
+interface IWebdavPlistConfig {
   host: string
   sslEnabled: boolean
   username: string
@@ -396,7 +361,7 @@ export interface IWebdavPlistConfig {
   options?: string
 }
 
-export interface ISftpPlistConfig {
+interface ISftpPlistConfig {
   host: string
   port?: number
   username: string
@@ -411,7 +376,7 @@ export interface ISftpPlistConfig {
   dirMode?: string
 }
 
-export interface IPicListConfig {
+interface IPicListConfig {
   host: string
   port?: number
   picbed?: string
@@ -419,7 +384,7 @@ export interface IPicListConfig {
   serverKey?: string
 }
 
-export interface ILskyConfig {
+interface ILskyConfig {
   version: string
   host: string
   token: string
@@ -428,7 +393,7 @@ export interface ILskyConfig {
   permission: IStringKeyMap
 }
 
-export interface IAwsS3PListUserConfig {
+interface IAwsS3PListUserConfig {
   accessKeyID: string
   secretAccessKey: string
   bucketName: string
@@ -443,37 +408,35 @@ export interface IAwsS3PListUserConfig {
   disableBucketPrefixToURL?: boolean | string
 }
 
-export type ILoggerType = string | Error | boolean | number | undefined
+type ILoggerType = string | Error | boolean | number | undefined
 
-export interface IAppNotification {
+interface IAppNotification {
   title: string
   body: string
   icon?: string
 }
 
-export interface IStringKeyMap {
-  [propName: string]: any
-}
+type IStringKeyMap = Record<string, any>
 
-export type ILogArgvType = string | number
+type ILogArgvType = string | number
 
-export type ILogArgvTypeWithError = ILogArgvType | Error
+type ILogArgvTypeWithError = ILogArgvType | Error
 
-export interface IMiniWindowPos {
+interface IMiniWindowPos {
   x: number
   y: number
   height: number
   width: number
 }
 
-export type PromiseResType<T> = T extends Promise<infer R> ? R : T
+type PromiseResType<T> = T extends Promise<infer R> ? R : T
 
-export interface II18nItem {
+interface II18nItem {
   label: string
   value: string
 }
 
-export interface IRemoteNotice {
+interface IRemoteNotice {
   version: number
   list: {
     versions: string[] // matched picgo version
@@ -482,7 +445,7 @@ export interface IRemoteNotice {
   }[]
 }
 
-export interface IRemoteNoticeAction {
+interface IRemoteNoticeAction {
   type: string
   // trigger time
   hooks: string[]
@@ -501,39 +464,45 @@ export interface IRemoteNoticeAction {
   }
 }
 
-export interface IRemoteNoticeButton {
+interface IRemoteNoticeButton {
   label: string
   labelEN?: string
   type: 'confirm' | 'cancel' | 'other'
   action: IRemoteNoticeAction
 }
 
-export interface IRemoteNoticeLocalCountStorage {
-  [id: string]: true | number
-}
+type IRemoteNoticeLocalCountStorage = Record<string, true | number>
 
-export interface IUploaderListItemMetaInfo {
+interface IUploaderListItemMetaInfo {
   _id: string
   _configName: string
   _updatedAt: number
   _createdAt: number
 }
 
-export interface IUploaderConfig {
-  [picBedType: string]: IUploaderConfigItem
-}
+type IUploaderConfig = Record<string, IUploaderConfigItem>
 
-export interface IUploaderConfigItem {
+interface IUploaderConfigItem {
   configList: IUploaderConfigListItem[]
   defaultId: string
 }
 
-export type IUploaderConfigListItem = IStringKeyMap & IUploaderListItemMetaInfo
+type IUploaderConfigListItem = IStringKeyMap & IUploaderListItemMetaInfo
 
-export type ICheckBoxValueType = boolean | string | number
+type ICheckBoxValueType = boolean | string | number
 
-export interface IHTTPProxy {
+interface IHTTPProxy {
   host: string
   port: number
   protocol: string
+}
+
+interface IGalleryDBGalleryItem {
+  id: string
+  updatedAt?: number
+  [propName: string]: any
+}
+interface IGalleryDBFile {
+  gallery: IGalleryDBGalleryItem[]
+  __gallery_KEY__: Record<string, number>
 }

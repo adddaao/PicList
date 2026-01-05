@@ -1,5 +1,3 @@
-import type { IStringKeyMap } from '#/types/types'
-
 export const RELEASE_URL = 'https://api.github.com/repos/Kuingsmile/PicList/releases'
 export const RELEASE_URL_BACKUP = 'https://release.piclist.cn'
 
@@ -25,7 +23,7 @@ export const picBedsCanbeDeleted = [
   'smms',
   'tcyun',
   'upyun',
-  'webdavplist'
+  'webdavplist',
 ]
 
 export const picBedManualUrlList: IStringKeyMap = {
@@ -47,7 +45,7 @@ export const picBedManualUrlList: IStringKeyMap = {
     sftpplist: 'https://piclist.cn/configure.html#%E5%86%85%E7%BD%AEsftp',
     smms: 'https://piclist.cn/configure.html#sm-ms',
     upyun: 'https://piclist.cn/configure.html#%E5%8F%88%E6%8B%8D%E4%BA%91',
-    webdavplist: 'https://piclist.cn/configure.html#webdav'
+    webdavplist: 'https://piclist.cn/configure.html#webdav',
   },
   en: {
     advancedpiclist: 'https://piclist.cn/en/configure.html#advanced',
@@ -67,6 +65,6 @@ export const picBedManualUrlList: IStringKeyMap = {
     sftpplist: 'https://piclist.cn/en/configure.html#built-in-sftp',
     smms: 'https://piclist.cn/en/configure.html#sm-ms',
     upyun: 'https://piclist.cn/en/configure.html#upyun',
-    webdavplist: 'https://piclist.cn/en/configure.html#webdav'
-  }
+    webdavplist: 'https://piclist.cn/en/configure.html#webdav',
+  },
 }

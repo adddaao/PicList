@@ -13,7 +13,6 @@ import { HttpProxyAgent, HttpsProxyAgent } from 'hpagent'
 import mime from 'mime'
 import Downloader from 'nodejs-file-downloader'
 
-import type { IHTTPProxy, IStringKeyMap } from '#/types/types'
 import UpDownTaskQueue from '~/manage/datastore/upDownTaskQueue'
 import { ManageLogger } from '~/manage/utils/logger'
 import { formatHttpProxy } from '~/utils/common'
@@ -25,11 +24,11 @@ export const getFSFile = async (filePath: string, stream: boolean = false): Prom
       extension: path.extname(filePath),
       fileName: path.basename(filePath),
       buffer: stream ? fs.createReadStream(filePath) : await fs.readFile(filePath),
-      success: true
+      success: true,
     }
-  } catch (e) {
+  } catch (_e) {
     return {
-      success: false
+      success: false,
     }
   }
 }
@@ -47,7 +46,7 @@ const getTempDirPath = () => {
 const checkTempFolderExist = async (tempPath: string) => {
   try {
     await fs.access(tempPath)
-  } catch (e) {
+  } catch (_e) {
     await fs.mkdir(tempPath)
   }
 }
@@ -64,7 +63,7 @@ export const downloadFileFromUrl = async (urls: string[]) => {
     const res = await axios({
       method: 'get',
       url,
-      responseType: 'stream'
+      responseType: 'stream',
     })
     res.data.pipe(writer)
     await finishDownload(writer)
@@ -87,7 +86,7 @@ export const NewDownloader = async (
   savedFilePath: string,
   logger?: ManageLogger,
   proxy?: string,
-  headers?: any
+  headers?: any,
 ): Promise<boolean> => {
   const options = {
     url: encodeURI(preSignedUrl),
@@ -98,10 +97,10 @@ export const NewDownloader = async (
       instance.updateDownloadTask({
         id,
         progress: Math.floor(Number(percentage)),
-        status: downloadTaskSpecialStatus.downloading
+        status: downloadTaskSpecialStatus.downloading,
       })
     },
-    maxAttempts: 3
+    maxAttempts: 3,
   } as any
   if (proxy) {
     options.proxy = proxy
@@ -116,7 +115,7 @@ export const NewDownloader = async (
       id,
       progress: 100,
       status: downloadTaskSpecialStatus.downloaded,
-      finishTime: new Date().toLocaleString()
+      finishTime: new Date().toLocaleString(),
     })
     return true
   } catch (e: any) {
@@ -127,7 +126,7 @@ export const NewDownloader = async (
       progress: 0,
       status: commonTaskStatus.failed,
       response: formatError(e, { method: 'NewDownloader' }),
-      finishTime: new Date().toLocaleString()
+      finishTime: new Date().toLocaleString(),
     })
     return false
   }
@@ -143,23 +142,23 @@ export const gotUpload = async (
   logger?: ManageLogger,
   timeout: number = 30000,
   throwHttpErrors: boolean = false,
-  agent: any = {}
+  agent: any = {},
 ) => {
   got(url, {
     headers,
     method,
     body,
     timeout: {
-      lookup: timeout
+      lookup: timeout,
     },
     throwHttpErrors,
-    agent
+    agent,
   })
     .on('uploadProgress', (progress: any) => {
       instance.updateUploadTask({
         id,
         progress: Math.floor(progress.percent * 100),
-        status: uploadTaskSpecialStatus.uploading
+        status: uploadTaskSpecialStatus.uploading,
       })
     })
     .then((res: any) => {
@@ -170,7 +169,7 @@ export const gotUpload = async (
           res?.statusCode === 200 || res?.statusCode === 201
             ? uploadTaskSpecialStatus.uploaded
             : commonTaskStatus.failed,
-        finishTime: new Date().toLocaleString()
+        finishTime: new Date().toLocaleString(),
       })
     })
     .catch((err: any) => {
@@ -180,7 +179,7 @@ export const gotUpload = async (
         progress: 0,
         response: formatError(err, { method: 'gotUpload' }),
         status: commonTaskStatus.failed,
-        finishTime: new Date().toLocaleString()
+        finishTime: new Date().toLocaleString(),
       })
     })
 }
@@ -193,14 +192,14 @@ export const formatError = (err: any, params: IStringKeyMap) => {
       name: 'RequestError',
       code: err.code,
       stack: err.stack ?? '',
-      timings: err.timings ?? {}
+      timings: err.timings ?? {},
     }
   } else if (err instanceof Error) {
     return {
       ...params,
       name: err.name ?? '',
       message: err.message ?? '',
-      stack: err.stack ?? ''
+      stack: err.stack ?? '',
     }
   }
   if (typeof err === 'object') {
@@ -212,12 +211,12 @@ export const formatError = (err: any, params: IStringKeyMap) => {
 const commonOptions = {
   keepAlive: true,
   keepAliveMsecs: 1000,
-  scheduling: 'lifo' as 'lifo' | 'fifo' | undefined
+  scheduling: 'lifo' as 'lifo' | 'fifo' | undefined,
 } as any
 
 export const getAgent = (
   proxy: any,
-  https: boolean = true
+  https: boolean = true,
 ): {
   https?: HttpsProxyAgent
   http?: HttpProxyAgent
@@ -225,7 +224,7 @@ export const getAgent = (
   const formatProxy = formatHttpProxy(proxy, 'string') as any
   const commonResult = {
     https: undefined,
-    http: undefined
+    http: undefined,
   }
   if (!formatProxy) return commonResult
   commonOptions.proxy = formatProxy.replace('127.0.0.1', 'localhost')
@@ -233,16 +232,16 @@ export const getAgent = (
     return {
       https: new HttpsProxyAgent({
         ...commonOptions,
-        rejectUnauthorized: false
+        rejectUnauthorized: false,
       }),
-      http: undefined
+      http: undefined,
     }
   }
   return {
     http: new HttpProxyAgent({
-      ...commonOptions
+      ...commonOptions,
     }),
-    https: undefined
+    https: undefined,
   }
 }
 
@@ -255,14 +254,14 @@ export const getInnerAgent = (proxy: any, sslEnabled: boolean = true) => {
             ...commonOptions,
             rejectUnauthorized: false,
             host: formatProxy.host,
-            port: formatProxy.port
-          })
+            port: formatProxy.port,
+          }),
         }
       : {
           agent: new https.Agent({
             rejectUnauthorized: false,
-            keepAlive: true
-          })
+            keepAlive: true,
+          }),
         }
   }
   return formatProxy
@@ -270,13 +269,13 @@ export const getInnerAgent = (proxy: any, sslEnabled: boolean = true) => {
         agent: new http.Agent({
           ...commonOptions,
           host: formatProxy.host,
-          port: formatProxy.port
-        })
+          port: formatProxy.port,
+        }),
       }
     : {
         agent: new http.Agent({
-          ...commonOptions
-        })
+          ...commonOptions,
+        }),
       }
 }
 
@@ -287,7 +286,7 @@ export function getOptions(
   responseType?: string,
   body?: any,
   timeout?: number,
-  proxy?: any
+  proxy?: any,
 ): OptionsOfTextResponseBody {
   return {
     ...(method && { method: method.toUpperCase() }),
@@ -297,9 +296,9 @@ export function getOptions(
     ...(responseType && { responseType }),
     ...(timeout !== undefined ? { timeout: { request: timeout } } : { timeout: { request: 30000 } }),
     ...(proxy && {
-      agent: Object.fromEntries(Object.entries(getAgent(proxy)).filter(([, v]) => v !== undefined))
+      agent: Object.fromEntries(Object.entries(getAgent(proxy)).filter(([, v]) => v !== undefined)),
     }),
-    throwHttpErrors: false
+    throwHttpErrors: false,
   }
 }
 

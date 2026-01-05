@@ -3,7 +3,7 @@
     <div class="title-bar-content">
       <div v-if="osGlobal !== 'darwin'" class="title-left">
         <div class="app-icon">
-          <img :src="defaultLogo" alt="App Icon" width="20" height="20" />
+          <img :src="defaultLogo" width="20" height="20" />
         </div>
       </div>
 
@@ -19,23 +19,20 @@
 
       <div class="title-right">
         <div class="window-controls">
-          <button
-            class="control-button pin-button"
-            :class="{ active: isAlwaysOnTop }"
-            :title="$t('titleBar.alwaysOnTop')"
-            @click="setAlwaysOnTop"
-          >
-            <PinIcon :color="isAlwaysOnTop ? '#CE6769' : '#6B7280'" :size="14" />
+          <button class="control-button pin-button" :title="$t('titleBar.alwaysOnTop')" @click="setAlwaysOnTop">
+            <PinIcon :size="14" class="pin-icon" :class="{ active: isAlwaysOnTop }" />
           </button>
-          <button class="control-button minimize-button" :title="$t('titleBar.minimize')" @click="minimizeWindow">
-            <MinusIcon :size="14" />
-          </button>
-          <button class="control-button mini-button" :title="$t('titleBar.miniWindow')" @click="openMiniWindow">
-            <ShrinkIcon :size="14" />
-          </button>
-          <button class="control-button close-button" :title="$t('titleBar.close')" @click="closeWindow">
-            <XIcon :size="14" />
-          </button>
+          <template v-if="osGlobal !== 'darwin'">
+            <button class="control-button minimize-button" :title="$t('titleBar.minimize')" @click="minimizeWindow">
+              <MinusIcon :size="14" />
+            </button>
+            <button class="control-button mini-button" :title="$t('titleBar.miniWindow')" @click="openMiniWindow">
+              <ShrinkIcon :size="14" />
+            </button>
+            <button class="control-button close-button" :title="$t('titleBar.close')" @click="closeWindow">
+              <XIcon :size="14" />
+            </button>
+          </template>
         </div>
       </div>
     </div>
@@ -59,17 +56,9 @@ function setAlwaysOnTop() {
   window.electron.sendRPC(IRPCActionType.MAIN_WINDOW_ON_TOP)
 }
 
-function minimizeWindow() {
-  window.electron.sendRPC(IRPCActionType.MINIMIZE_WINDOW)
-}
-
-function openMiniWindow() {
-  window.electron.sendRPC(IRPCActionType.OPEN_MINI_WINDOW)
-}
-
-function closeWindow() {
-  window.electron.sendRPC(IRPCActionType.CLOSE_WINDOW)
-}
+const minimizeWindow = () => window.electron.sendRPC(IRPCActionType.MINIMIZE_WINDOW)
+const openMiniWindow = () => window.electron.sendRPC(IRPCActionType.OPEN_MINI_WINDOW)
+const closeWindow = () => window.electron.sendRPC(IRPCActionType.CLOSE_WINDOW)
 
 const uploadProcessHandler = (data: { progress: number }) => {
   isShowprogress.value = data.progress !== 100 && data.progress !== 0
@@ -89,21 +78,21 @@ onBeforeUnmount(() => {
 .title-bar {
   position: fixed;
   top: 0;
-  left: 0;
   right: 0;
+  left: 0;
+  z-index: 1000;
+  border-bottom: 1px solid var(--color-border);
   height: 32px;
   background: var(--color-background-secondary);
-  border-bottom: 1px solid var(--color-border);
-  z-index: 1000;
   -webkit-app-region: drag;
 }
 
 .title-bar-content {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  height: 100%;
+  align-items: center;
   padding: 0 16px;
+  height: 100%;
 }
 
 .title-left {
@@ -132,11 +121,11 @@ onBeforeUnmount(() => {
 }
 
 .app-version {
+  border-radius: 4px;
+  padding: 2px 6px;
   font-size: 12px;
   color: var(--color-text-secondary);
   background: var(--color-border);
-  padding: 2px 6px;
-  border-radius: 4px;
 }
 
 .title-center {
@@ -151,28 +140,33 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 8px;
-  max-width: 200px;
+  width: 100%;
+  min-width: 100px;
+  max-width: 600px;
 }
 
 .progress-bar {
-  flex: 1;
-  height: 4px;
-  background: var(--color-border);
-  border-radius: 2px;
   overflow: hidden;
+  border-radius: 2px;
+  width: 100%;
+  min-width: 100px;
+  max-width: 600px;
+  height: 14px;
+  background: var(--color-border);
+  flex: 1;
 }
 
 .progress-fill {
+  border-radius: 2px;
   height: 100%;
   background: var(--color-success);
-  border-radius: 2px;
   transition: width 0.3s ease;
 }
 
 .progress-text {
+  min-width: 35px;
   font-size: 11px;
   color: var(--color-text-secondary);
-  min-width: 35px;
 }
 
 .title-right {
@@ -189,30 +183,44 @@ onBeforeUnmount(() => {
 
 .control-button {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 4px;
   width: 28px;
   height: 20px;
-  border: none;
-  background: transparent;
-  border-radius: 4px;
   color: var(--color-text-secondary);
-  cursor: pointer;
+  background: transparent;
   transition: var(--transition);
+  cursor: pointer;
 }
 
 .control-button:hover {
-  background: var(--color-surface-elevated);
   color: var(--color-text-primary);
+  background: var(--color-surface-elevated);
 }
 
-.pin-button.active {
-  color: var(--color-accent);
-  background: var(--color-accent) 20;
+.pin-icon {
+  color: #6b7280;
+}
+
+.pin-icon.active {
+  rotate: 90deg;
+  color: #ce6769;
+}
+
+.minimize-button:hover {
+  color: white;
+  background: color-mix(in srgb, var(--color-warning), transparent 15%);
+}
+
+.mini-button:hover {
+  color: white;
+  background: color-mix(in srgb, var(--color-success), transparent 15%);
 }
 
 .close-button:hover {
-  background: var(--color-danger);
   color: white;
+  background: var(--color-danger);
 }
 </style>

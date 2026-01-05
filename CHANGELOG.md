@@ -1,3 +1,54 @@
+##  (2026-01-03)
+
+* :bug: Fix(custom): fix a bug that the update progress bar not show 760ab51
+* :bug: Fix(custom): fix an issue setting copy format will result ui collapse 3876a5a
+* :bug: Fix(custom): fix an issue the image in local can't show in manage page 0db5926
+* :bug: Fix(custom): fix info copy bug and optimize loading toast 11ee6a7
+* :hammer: Refactor(custom): change type defination in universal to global 5ea2517
+* :hammer: Refactor(custom): use new useTemplateRef of vue 3.5 21e79af
+* :package: Chore(custom): add editorconfig file a5afffd
+* :package: Chore(custom): add permissions setting for workfolw file 0c7fa06
+* :package: Chore(custom): update winget file d10e3d1
+* :pencil: Docs(custom): prepare for new version 390930e
+* :sparkles: Feature(custom): add rotate for pin icon of title bar and backgroud color for button fa6f2a9
+* :sparkles: Feature(custom): add selected inhint and optimize UI of manage file explorer page 94fe4f4
+* :sparkles: Feature(custom): add strict search for plugin search, avoid unrelated results 1735516
+* :sparkles: Feature(custom): optimize bucket page display b886005
+* :sparkles: Feature(custom): optimize upload page and download page in manage 58f6fa4
+* :sparkles: Feature(custom): optmize gallery page and manage login page layout dbda618
+* :zap: Perf(custom): remove backdrop-filter for better performance 34fde7a
+* Update dependency got to v14.6.6 (#436) 6f44cf1, closes #436
+* Update dependency vue-i18n to v11.2.8 (#440) 8a4e4d0, closes #440
+
+
+
+##  (2025-12-31)
+
+* :bug: Fix(custom): fix an issue eslint not worked as expected b53eccc
+* :bug: Fix(custom): fix gitee sync bug 07c4bd7
+* :construction: WIP(custom): optimize gallery db sync logic and force refresh gallery 0ae680d
+* :construction: WIP(custom): support sync gallery db file 6a8d3f6, closes #355 #417
+* :package: Chore(custom): update gitignore file 4fb5a26
+* :package: Chore(custom): update winget file 33358ce
+* :package: Chore(custom): update workflow 391c52b
+* :pencil: Docs(custom): update docs 5a6ef59
+* :sparkles: Feature(custom): automatically save config change of image process setting 95cc775, closes #412
+* :sparkles: Feature(custom): change the position of save/cancel button in advanced rename page 33ccd4b
+* :sparkles: Feature(custom): optimize image process setting page b5802cf
+* :sparkles: Feature(custom): optimize picbed config edit page 5ce2397
+* :sparkles: Feature(custom): optimize UI of config sync panel and dialog edff735
+* :sparkles: Feature(custom): optimize UI of setting page 0dee36e
+* :sparkles: Feature(custom): optimize uploader config setting page c36c931
+* :sparkles: Feature(custom): support adjust grid size in gallery page a769123, closes #419
+* :sparkles: Feature(custom): support duplicate config and the UI of confirm/input box is optimized c7fd139
+* :sparkles: Feature(custom): upgrade to electron v39 and electron-vite 5.0, suppress derecation notif a4c9237
+* Add renovate.json (#426) 7a2a10a, closes #426
+* Update dependency @smithy/node-http-handler to v4.4.7 (#427) b36cc23, closes #427
+* Update dependency @types/node to v24.10.4 (#428) f8f17fb, closes #428
+* Fix(ui): macos displays Windows title bar (#421) 263a306, closes #421
+
+
+
 ##  (2025-11-18)
 
 * :arrow_up: Upgrade(custom): upgrade aws sdk 30b54cb

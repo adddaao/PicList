@@ -11,7 +11,7 @@
                 {{
                   t('pages.manage.setting.clearCache', {
                     percent: dbSizeAvailableRate,
-                    size: formatFileSize(dbSize) || 0
+                    size: formatFileSize(dbSize) || 0,
                   })
                 }}
               </button>
@@ -157,8 +157,8 @@
             </h4>
           </div>
           <div class="radio-group">
-            <label v-for="item in pasteFormatList" :key="item" class="radio-option">
-              <input v-model="form.pasteFormat" type="radio" :value="item" class="radio-input" />
+            <label v-for="item in pasteFormatList" :key="`format-${item}`" class="radio-option">
+              <input v-model="form.pasteFormat" type="radio" :value="item" class="radio-input" :name="'paste-format'" />
               <span class="radio-custom" />
               <span class="radio-text">
                 {{ t(`pages.manage.setting.copyFormat.${item}`) }}
@@ -216,7 +216,7 @@
 
 <script lang="ts" setup>
 import { FolderIcon, Trash2Icon } from 'lucide-vue-next'
-import { onBeforeMount, ref, watch } from 'vue'
+import { nextTick, onBeforeMount, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 
 import useConfirm from '@/hooks/useConfirm'
@@ -226,7 +226,6 @@ import { fileCacheDbInstance } from '@/manage/store/bucketFileDb'
 import { customRenameFormatTable, formatFileSize } from '@/manage/utils/common'
 import { getConfig, saveConfig } from '@/manage/utils/dataSender'
 import { IRPCActionType } from '@/utils/enum'
-import type { IStringKeyMap } from '#/types/types'
 
 const { t } = useI18n()
 const message = useMessage()
@@ -249,7 +248,7 @@ const form = ref<IStringKeyMap>({
   customPasteFormat: '$url',
   PreSignedExpire: 14400, // seconds
   maxDownloadFileCount: 5,
-  customRenameFormat: '{filename}'
+  customRenameFormat: '{filename}',
 })
 
 const settingsKeys = Object.keys(form.value)
@@ -262,7 +261,10 @@ const pasteFormatList = ['markdown', 'markdown-with-link', 'rawurl', 'html', 'bb
 settingsKeys.forEach(key => {
   watch(
     () => form.value[key],
-    newValue => saveConfig({ [`settings.${key}`]: newValue })
+    newValue => {
+      saveConfig({ [`settings.${key}`]: newValue })
+    },
+    { flush: 'post' },
   )
 })
 
@@ -276,7 +278,7 @@ const switchFieldsList = [
   'isIgnoreCase',
   'timestampRename',
   'randomStringRename',
-  'customRename'
+  'customRename',
 ]
 const switchFieldsNoTipsList = ['isShowThumbnail', 'isUsePreSignedUrl']
 const switchFieldsHasActiveTextList = [] as string[]
@@ -286,12 +288,12 @@ const switchFieldsConfigList = switchFieldsList.map(item => ({
   segments: [
     {
       text: t(`pages.manage.setting.${item}Title` as any),
-      style: 'color: var(--color-text-primary);'
-    }
+      style: 'color: var(--color-text-primary);',
+    },
   ],
   tooltip: switchFieldsNoTipsList.includes(item) ? undefined : t(`pages.manage.setting.${item}Tips` as any),
   activeText: switchFieldsHasActiveTextList.includes(item) ? t(`pages.manage.setting.${item}On` as any) : undefined,
-  inactiveText: switchFieldsHasActiveTextList.includes(item) ? t(`pages.manage.setting.${item}Off` as any) : undefined
+  inactiveText: switchFieldsHasActiveTextList.includes(item) ? t(`pages.manage.setting.${item}Off` as any) : undefined,
 }))
 
 const switchFieldsSpecialList = [
@@ -300,37 +302,37 @@ const switchFieldsSpecialList = [
     segments: [
       {
         text: t('pages.manage.setting.download'),
-        style: 'color: var(--color-text-primary);'
+        style: 'color: var(--color-text-primary);',
       },
       {
         text: t('pages.manage.setting.file'),
-        style: 'color: orange;'
+        style: 'color: orange;',
       },
       {
         text: t('pages.manage.setting.keepDirStructure'),
-        style: 'color: var(--color-text-primary);'
-      }
+        style: 'color: var(--color-text-primary);',
+      },
     ],
-    tooltip: t('pages.manage.setting.keepDirStructureDesc')
+    tooltip: t('pages.manage.setting.keepDirStructureDesc'),
   },
   {
     configName: 'isDownloadFolderKeepDirStructure',
     segments: [
       {
         text: t('pages.manage.setting.download'),
-        style: 'color: var(--color-text-primary);'
+        style: 'color: var(--color-text-primary);',
       },
       {
         text: t('pages.manage.setting.folder'),
-        style: 'color: orange;'
+        style: 'color: orange;',
       },
       {
         text: t('pages.manage.setting.keepDirStructure'),
-        style: 'color: var(--color-text-primary);'
-      }
+        style: 'color: var(--color-text-primary);',
+      },
     ],
-    tooltip: t('pages.manage.setting.keepDirStructureDesc')
-  }
+    tooltip: t('pages.manage.setting.keepDirStructureDesc'),
+  },
 ]
 
 async function initData() {
@@ -338,6 +340,7 @@ async function initData() {
   settingsKeys.forEach(key => {
     form.value[key] = config.settings[key] ?? form.value[key]
   })
+  await nextTick() // 确保DOM更新完成
 }
 
 async function handleDownloadDirClick() {
@@ -359,7 +362,7 @@ function handleConfirmClearDb() {
     type: 'warning',
     confirmButtonText: t('common.confirm'),
     cancelButtonText: t('common.cancel'),
-    center: true
+    center: true,
   }).then(result => {
     if (result) {
       confirmClearDb()

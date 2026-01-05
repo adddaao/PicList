@@ -1,6 +1,5 @@
 import db from '@core/datastore'
 
-import type { ImgInfo } from '#/types/types'
 import { generateShortUrl, handleUrlEncodeWithSetting } from '~/utils/common'
 import { configPaths } from '~/utils/configPaths'
 
@@ -11,7 +10,7 @@ export const formatCustomLink = (customLink: string, item: ImgInfo) => {
   const formatObj = {
     url,
     fileName,
-    extName
+    extName,
   }
   const keys = Object.keys(formatObj) as ['url', 'fileName', 'extName']
   keys.forEach(item => {
@@ -41,8 +40,8 @@ export default async (style: string, item: ImgInfo, customLink: string | undefin
     UBB: `[IMG]${url}[/IMG]`,
     Custom: formatCustomLink(_customLink, {
       ...item,
-      url
-    })
+      url,
+    }),
   }
   return [tpl[style], useShortUrl ? url : '']
 }

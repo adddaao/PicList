@@ -1,6 +1,5 @@
 import Upyun from 'upyun'
 
-import type { IUpYunConfig, PartialKeys } from '#/types/types'
 import { deleteFailedLog, deleteLog } from '~/utils/deleteLog'
 
 interface IConfigMap {
@@ -12,7 +11,7 @@ export default class UpyunApi {
   static async delete(configMap: IConfigMap): Promise<boolean> {
     const {
       fileName,
-      config: { bucket, operator, password, path }
+      config: { bucket, operator, password, path },
     } = configMap
     try {
       const service = new Upyun.Service(bucket, operator, password)

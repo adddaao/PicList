@@ -6,8 +6,6 @@ import dayjs from 'dayjs'
 import fs from 'fs-extra'
 import { ILogColor, ILogger } from 'piclist/dist/types'
 
-import type { IManageApiType, Undefinable } from '#/types/manage'
-import type { ILogArgvType, ILogArgvTypeWithError } from '#/types/types'
 import { enforceNumber } from '~/utils/common'
 import { configPaths } from '~/utils/configPaths'
 import { ILogType } from '~/utils/enum'
@@ -17,7 +15,7 @@ export class ManageLogger implements ILogger {
     [ILogType.success]: 'green',
     [ILogType.info]: 'blue',
     [ILogType.warn]: 'yellow',
-    [ILogType.error]: 'red'
+    [ILogType.error]: 'red',
   }
 
   readonly #ctx: IManageApiType
@@ -67,12 +65,12 @@ export class ManageLogger implements ILogger {
       return {
         isLarge: logFileSize > logFileSizeLimit,
         logFileSize,
-        logFileSizeLimit
+        logFileSizeLimit,
       }
     }
     fs.ensureFileSync(logPath)
     return {
-      isLarge: false
+      isLarge: false,
     }
   }
 

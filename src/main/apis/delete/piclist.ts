@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
 
-import type { IStringKeyMap } from '#/types/types'
 import { deleteFailedLog, deleteLog } from '~/utils/deleteLog'
 
 export default class PiclistApi {
@@ -18,7 +17,7 @@ export default class PiclistApi {
 
     try {
       const response: AxiosResponse = await axios.post(url, {
-        list: [fullResult]
+        list: [fullResult],
       })
       const ok = response.status === 200 && response.data?.success
       deleteLog(fullResult, 'Piclist', ok)

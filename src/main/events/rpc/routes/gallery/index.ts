@@ -3,8 +3,6 @@ import picgo from '@core/picgo'
 import GuiApi from 'apis/gui'
 import { clipboard } from 'electron'
 
-import type { IIPCEvent } from '#/types/rpc'
-import type { ImgInfo } from '#/types/types'
 import { RPCRouter } from '~/events/rpc/router'
 import { configPaths } from '~/utils/configPaths'
 import { ICOREBuildInEvent, IPasteStyle, IRPCActionType, IRPCType } from '~/utils/enum'
@@ -34,7 +32,7 @@ const galleryRoutes = [
       }
       return [txt, shortUrl]
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_REMOVE_FILES,
@@ -42,7 +40,7 @@ const galleryRoutes = [
       setTimeout(() => {
         picgo.emit(ICOREBuildInEvent.REMOVE, args[0], GuiApi.getInstance())
       }, 500)
-    }
+    },
   },
   {
     action: IRPCActionType.GALLERY_GET_DB,
@@ -50,7 +48,7 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.get(args[0])
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_GET_BY_ID_DB,
@@ -58,7 +56,7 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.getById(args[0])
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_UPDATE_BY_ID_DB,
@@ -66,7 +64,7 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.updateById(args[0], args[1])
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_REMOVE_BY_ID_DB,
@@ -74,7 +72,7 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.removeById(args[0])
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_INSERT_DB,
@@ -82,7 +80,7 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.insert(args[0])
     },
-    type: IRPCType.INVOKE
+    type: IRPCType.INVOKE,
   },
   {
     action: IRPCActionType.GALLERY_INSERT_DB_BATCH,
@@ -90,8 +88,8 @@ const galleryRoutes = [
       const dbStore = GalleryDB.getInstance()
       return await dbStore.insertMany(args[0])
     },
-    type: IRPCType.INVOKE
-  }
+    type: IRPCType.INVOKE,
+  },
 ]
 
 galleryRouter.addBatch(galleryRoutes)

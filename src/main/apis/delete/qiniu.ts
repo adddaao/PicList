@@ -1,6 +1,5 @@
 import qiniu from 'qiniu'
 
-import type { IQiniuConfig, PartialKeys } from '#/types/types'
 import { deleteFailedLog, deleteLog } from '~/utils/deleteLog'
 interface IConfigMap {
   fileName: string
@@ -11,7 +10,7 @@ export default class QiniuApi {
   static async delete(configMap: IConfigMap): Promise<boolean> {
     const {
       fileName,
-      config: { accessKey, secretKey, bucket, path }
+      config: { accessKey, secretKey, bucket, path },
     } = configMap
     const mac = new qiniu.auth.digest.Mac(accessKey, secretKey)
     const qiniuConfig = new qiniu.conf.Config()
@@ -26,7 +25,7 @@ export default class QiniuApi {
           } else {
             resolve({
               respBody,
-              respInfo
+              respInfo,
             })
           }
         })

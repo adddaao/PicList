@@ -6,7 +6,6 @@ import path from 'node:path'
 import { app } from 'electron'
 import fs from 'fs-extra'
 
-import type { IDownloadTask, IUploadTask } from '#/types/manage'
 import { commonTaskStatus, downloadTaskSpecialStatus, uploadTaskSpecialStatus } from '~/utils/enum'
 
 class UpDownTaskQueue {
@@ -108,7 +107,7 @@ class UpDownTaskQueue {
       item =>
         item.status !== uploadTaskSpecialStatus.uploaded &&
         item.status !== commonTaskStatus.canceled &&
-        item.status !== commonTaskStatus.failed
+        item.status !== commonTaskStatus.failed,
     )
   }
 
@@ -117,7 +116,7 @@ class UpDownTaskQueue {
       item =>
         item.status !== downloadTaskSpecialStatus.downloaded &&
         item.status !== commonTaskStatus.canceled &&
-        item.status !== commonTaskStatus.failed
+        item.status !== commonTaskStatus.failed,
     )
   }
 
@@ -137,8 +136,8 @@ class UpDownTaskQueue {
         this.persistPath,
         JSON.stringify({
           uploadTaskQueue: this.uploadTaskQueue,
-          downloadTaskQueue: this.downloadTaskQueue
-        })
+          downloadTaskQueue: this.downloadTaskQueue,
+        }),
       )
     } catch (e) {
       console.log(e)
@@ -151,7 +150,7 @@ class UpDownTaskQueue {
       const persistData = JSON.parse(fs.readFileSync(this.persistPath, { encoding: 'utf-8' }))
       this.uploadTaskQueue = persistData.uploadTaskQueue
       this.downloadTaskQueue = persistData.downloadTaskQueue
-    } catch (e) {
+    } catch (_e) {
       this.uploadTaskQueue = []
       this.downloadTaskQueue = []
     }
@@ -163,19 +162,19 @@ class UpDownTaskQueue {
         this.persistPath,
         JSON.stringify({
           uploadTaskQueue: this.uploadTaskQueue,
-          downloadTaskQueue: this.downloadTaskQueue
-        })
+          downloadTaskQueue: this.downloadTaskQueue,
+        }),
       )
     }
     try {
       JSON.parse(fs.readFileSync(this.persistPath, { encoding: 'utf-8' }))
-    } catch (e) {
+    } catch (_e) {
       fs.writeFileSync(
         this.persistPath,
         JSON.stringify({
           uploadTaskQueue: this.uploadTaskQueue,
-          downloadTaskQueue: this.downloadTaskQueue
-        })
+          downloadTaskQueue: this.downloadTaskQueue,
+        }),
       )
     }
   }

@@ -6,7 +6,6 @@ import FormData from 'form-data'
 import fs from 'fs-extra'
 import got from 'got'
 
-import type { IStringKeyMap } from '#/types/types'
 import UpDownTaskQueue from '~/manage/datastore/upDownTaskQueue'
 import {
   ConcurrencyPromisePool,
@@ -15,7 +14,7 @@ import {
   getFileMimeType,
   getOptions,
   gotUpload,
-  NewDownloader
+  NewDownloader,
 } from '~/manage/utils/common'
 import ManageLogger from '~/manage/utils/logger'
 import { formatHttpProxy, isImage } from '~/utils/common'
@@ -38,7 +37,7 @@ class ImgurApi {
     this.proxyStr = formatHttpProxy(proxy, 'string') as string | undefined
     this.logger = logger
     this.tokenHeaders = {
-      Authorization: this.accessToken
+      Authorization: this.accessToken,
     }
   }
 
@@ -57,7 +56,7 @@ class ImgurApi {
       match: false,
       isImage: isImg,
       url: item.link,
-      sha: item.deletehash
+      sha: item.deletehash,
     }
   }
 
@@ -71,7 +70,7 @@ class ImgurApi {
     do {
       res = (await got(
         `${this.baseUrl}/account/${this.userName}/albums/${initPage}`,
-        getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy)
+        getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy),
       )) as any
       if (!(res.statusCode === 200 && res.body.success)) {
         return []
@@ -83,12 +82,12 @@ class ImgurApi {
       ...item,
       Name: item.title,
       Location: item.id,
-      CreationDate: item.datetime
+      CreationDate: item.datetime,
     })) as any[]
     finalResult.push({
       Name: '全部',
       Location: 'unclassified',
-      CreationDate: new Date().getTime()
+      CreationDate: new Date().getTime(),
     })
     return finalResult
   }
@@ -97,7 +96,7 @@ class ImgurApi {
     const window = windowManager.get(IWindowList.SETTING_WINDOW)!
     const {
       bucketConfig: { Location: albumHash },
-      cancelToken
+      cancelToken,
     } = configMap
     const cancelTask = [false]
     ipcMain.on('cancelLoadingFileList', (_: IpcMainEvent, token: string) => {
@@ -110,12 +109,12 @@ class ImgurApi {
     const result = {
       fullList: [] as any,
       success: false,
-      finished: false
+      finished: false,
     }
     if (albumHash !== 'unclassified') {
       res = (await got(
         `${this.baseUrl}/account/${this.userName}/album/${albumHash}`,
-        getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy)
+        getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy),
       )) as any
       if (res.statusCode === 200 && res.body.success) {
         res.body.data.images.forEach((item: any) => {
@@ -132,7 +131,7 @@ class ImgurApi {
       do {
         res = (await got(
           `${this.baseUrl}/account/${this.userName}/images/${initPage}`,
-          getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy)
+          getOptions('GET', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy),
         )) as any
         if (res.statusCode === 200 && res.body.success) {
           res.body.data.forEach((item: any) => {
@@ -157,7 +156,7 @@ class ImgurApi {
     const { DeleteHash: deleteHash } = configMap
     const res = (await got(
       `${this.baseUrl}/account/${this.userName}/image/${deleteHash}`,
-      getOptions('DELETE', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy)
+      getOptions('DELETE', this.tokenHeaders, undefined, 'json', undefined, undefined, this.proxy),
     )) as any
     return res.statusCode === 200 && res.body.success
   }
@@ -186,7 +185,7 @@ class ImgurApi {
         sourceFilePath: filePath,
         targetFilePath: key,
         targetFileBucket: bucketName,
-        targetFileRegion: albumHash
+        targetFileRegion: albumHash,
       })
       const form = new FormData()
       form.append('type', 'file')
@@ -195,12 +194,12 @@ class ImgurApi {
       if (fileSize > 1024 * 1024 * 10) {
         form.append('video', fs.createReadStream(filePath), {
           filename: path.basename(key),
-          contentType: getFileMimeType(fileName)
+          contentType: getFileMimeType(fileName),
         })
       } else {
         form.append('image', fs.createReadStream(filePath), {
           filename: path.basename(key),
-          contentType: getFileMimeType(fileName)
+          contentType: getFileMimeType(fileName),
         })
       }
       albumHash !== 'unclassified' && form.append('album', albumHash)
@@ -216,7 +215,7 @@ class ImgurApi {
         this.logger,
         30000,
         false,
-        getAgent(this.proxy)
+        getAgent(this.proxy),
       )
     }
     return true
@@ -242,7 +241,7 @@ class ImgurApi {
         progress: 0,
         status: commonTaskStatus.queuing,
         sourceFileName: fileName,
-        targetFilePath: savedFilePath
+        targetFilePath: savedFilePath,
       })
       promises.push(
         () =>
@@ -254,7 +253,7 @@ class ImgurApi {
                 reject(res)
               }
             })
-          })
+          }),
       )
     }
     const pool = new ConcurrencyPromisePool(maxDownloadFileCount)

@@ -39,6 +39,7 @@ import { CLIPBOARD_IMAGE_FOLDER } from '~/utils/static'
 import updateChecker from '~/utils/updateChecker'
 
 const isDevelopment = process.env.NODE_ENV !== 'production'
+process.noDeprecation = true
 
 const handleStartUpFiles = (argv: string[], cwd: string) => {
   const files = getUploadFiles(argv, cwd, logger)
@@ -62,7 +63,7 @@ const handleStartUpFiles = (argv: string[], cwd: string) => {
 updater.autoUpdater.setFeedURL({
   provider: 'generic',
   url: 'https://release.piclist.cn/latest',
-  channel: 'latest'
+  channel: 'latest',
 })
 
 updater.autoUpdater.autoDownload = false
@@ -101,13 +102,13 @@ updater.autoUpdater.on('update-available', async (info: updater.UpdateInfo) => {
       buttons: ['Yes', 'Go to download page'],
       message:
         $t('TIPS_FIND_NEW_VERSION', {
-          v: info.version
+          v: info.version,
         }) +
         '\n\n' +
         displayLog +
         truncatedNote,
       checkboxLabel: $t('NO_MORE_NOTICE'),
-      checkboxChecked: false
+      checkboxChecked: false,
     })
     .then(result => {
       if (result.response === 0) {
@@ -124,7 +125,7 @@ updater.autoUpdater.on('update-available', async (info: updater.UpdateInfo) => {
 
 updater.autoUpdater.on('download-progress', progressObj => {
   const percent = {
-    progress: progressObj.percent
+    progress: progressObj.percent,
   }
   const window = windowManager.get(IWindowList.SETTING_WINDOW)!
   window.webContents.send('updateProgress', percent)
@@ -136,7 +137,7 @@ updater.autoUpdater.on('update-downloaded', () => {
       type: 'info',
       title: $t('UPDATE_DOWNLOADED'),
       buttons: ['Yes', 'No'],
-      message: $t('TIPS_UPDATE_DOWNLOADED')
+      message: $t('TIPS_UPDATE_DOWNLOADED'),
     })
     .then(result => {
       const window = windowManager.get(IWindowList.SETTING_WINDOW)!
@@ -243,7 +244,7 @@ class LifeCycle {
             miniWindow.setPosition(width - miniWindow.getSize()[0], height - miniWindow.getSize()[1])
             db.set(configPaths.settings.miniWindowPosition, [
               width - miniWindow.getSize()[0],
-              height - miniWindow.getSize()[1]
+              height - miniWindow.getSize()[1],
             ])
           } else {
             miniWindow.setPosition(lastPosition[0], lastPosition[1])
@@ -297,7 +298,7 @@ class LifeCycle {
       .then(actualAutoStartEnabled => {
         if (actualAutoStartEnabled !== storedAutoStartEnabled) {
           logger.warn(
-            `Auto-start state mismatch detected. Stored: ${storedAutoStartEnabled}, Actual: ${actualAutoStartEnabled}. Syncing...`
+            `Auto-start state mismatch detected. Stored: ${storedAutoStartEnabled}, Actual: ${actualAutoStartEnabled}. Syncing...`,
           )
           setAutoStart(storedAutoStartEnabled).catch(err => {
             logger.error('Failed to sync auto-start:', err)

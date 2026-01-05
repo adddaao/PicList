@@ -4,8 +4,6 @@ import { debounce } from 'lodash-es'
 import { PicGo } from 'piclist'
 import pkg from 'root/package.json'
 
-import type { IStringKeyMap } from '#/types/types'
-
 const CONFIG_PATH = dbPathChecker()
 
 dbChecker()
@@ -14,7 +12,7 @@ const picgo = await PicGo.create(CONFIG_PATH)
 
 picgo.saveConfig({
   debug: true,
-  PICGO_ENV: 'GUI'
+  PICGO_ENV: 'GUI',
 })
 
 picgo.GUI_VERSION = pkg.version

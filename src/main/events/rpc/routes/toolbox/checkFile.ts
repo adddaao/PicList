@@ -5,7 +5,6 @@ import { dbPathChecker } from '@core/datastore/dbChecker'
 import type { IpcMainEvent } from 'electron'
 import fs from 'fs-extra'
 
-import type { IToolboxCheckerMap, IToolboxFixMap } from '#/types/rpc'
 import { sendToolboxResWithType } from '~/events/rpc/routes/toolbox/utils'
 import { T as $t } from '~/i18n'
 import { IToolboxItemCheckStatus, IToolboxItemType } from '~/utils/enum'
@@ -14,7 +13,7 @@ export const checkFileMap: IToolboxCheckerMap<string> = {
   [IToolboxItemType.IS_CONFIG_FILE_BROKEN]: async (event: IpcMainEvent) => {
     const sendToolboxRes = sendToolboxResWithType(IToolboxItemType.IS_CONFIG_FILE_BROKEN)
     sendToolboxRes(event, {
-      status: IToolboxItemCheckStatus.LOADING
+      status: IToolboxItemCheckStatus.LOADING,
     })
     const configFilePath = dbPathChecker()
     try {
@@ -23,64 +22,64 @@ export const checkFileMap: IToolboxCheckerMap<string> = {
         sendToolboxRes(event, {
           status: IToolboxItemCheckStatus.SUCCESS,
           msg: $t('TOOLBOX_CHECK_CONFIG_FILE_PATH_TIPS', {
-            path: configFilePath
+            path: configFilePath,
           }),
-          value: configFilePath
+          value: configFilePath,
         })
       }
-    } catch (e) {
+    } catch (_e) {
       sendToolboxRes(event, {
         status: IToolboxItemCheckStatus.ERROR,
         msg: $t('TOOLBOX_CHECK_CONFIG_FILE_BROKEN_TIPS'),
-        value: path.dirname(configFilePath)
+        value: path.dirname(configFilePath),
       })
     }
   },
   [IToolboxItemType.IS_GALLERY_FILE_BROKEN]: async event => {
     const sendToolboxRes = sendToolboxResWithType(IToolboxItemType.IS_GALLERY_FILE_BROKEN)
     sendToolboxRes(event, {
-      status: IToolboxItemCheckStatus.LOADING
+      status: IToolboxItemCheckStatus.LOADING,
     })
     const galleryDB = GalleryDB.getInstance()
     if (galleryDB.errorList.length === 0) {
       sendToolboxRes(event, {
         status: IToolboxItemCheckStatus.SUCCESS,
         msg: $t('TOOLBOX_CHECK_GALLERY_FILE_PATH_TIPS', {
-          path: DB_PATH
+          path: DB_PATH,
         }),
-        value: path.dirname(DB_PATH)
+        value: path.dirname(DB_PATH),
       })
     } else {
       sendToolboxRes(event, {
         status: IToolboxItemCheckStatus.ERROR,
         msg: $t('TOOLBOX_CHECK_GALLERY_FILE_BROKEN_TIPS'),
-        value: path.dirname(DB_PATH)
+        value: path.dirname(DB_PATH),
       })
     }
-  }
+  },
 }
 
 export const fixFileMap: IToolboxFixMap<string> = {
   [IToolboxItemType.IS_CONFIG_FILE_BROKEN]: async () => {
     try {
       fs.unlinkSync(dbPathChecker())
-    } catch (e) {
+    } catch (_e) {
       // do nothing
     }
     return {
       type: IToolboxItemType.IS_CONFIG_FILE_BROKEN,
-      status: IToolboxItemCheckStatus.SUCCESS
+      status: IToolboxItemCheckStatus.SUCCESS,
     }
   },
   [IToolboxItemType.IS_GALLERY_FILE_BROKEN]: async () => {
     try {
       fs.unlinkSync(DB_PATH)
-    } catch (e) {
+    } catch (_e) {
       // do nothing
     }
     return {
       type: IToolboxItemType.IS_GALLERY_FILE_BROKEN,
-      status: IToolboxItemCheckStatus.SUCCESS
+      status: IToolboxItemCheckStatus.SUCCESS,
     }
-  }
+  },
 }

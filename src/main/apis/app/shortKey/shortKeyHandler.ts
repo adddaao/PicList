@@ -6,13 +6,6 @@ import shortKeyService from 'apis/app/shortKey/shortKeyService'
 import GuiApi from 'apis/gui'
 import { globalShortcut } from 'electron'
 
-import type {
-  IKeyCommandType,
-  IPluginShortKeyConfig,
-  IShortKeyConfig,
-  IShortKeyConfigs,
-  IShortKeyHandler
-} from '#/types/types'
 import { TOGGLE_SHORTKEY_MODIFIED_MODE } from '~/events/constant'
 import { configPaths } from '~/utils/configPaths'
 
@@ -78,7 +71,7 @@ class ShortKeyHandler {
     config: IShortKeyConfig | IPluginShortKeyConfig,
     command: string,
     handler: IShortKeyHandler,
-    writeFlag: boolean
+    writeFlag: boolean,
   ) {
     shortKeyService.registerCommand(command, handler)
     if (config.key) {
@@ -96,8 +89,8 @@ class ShortKeyHandler {
           enable: true,
           name: config.name,
           label: config.label,
-          key: config.key
-        }
+          key: config.key,
+        },
       })
     }
   }
@@ -108,7 +101,7 @@ class ShortKeyHandler {
     if (item.enable === false) {
       globalShortcut.unregister(item.key)
       picgo.saveConfig({
-        [`settings.shortKey.${command}.enable`]: false
+        [`settings.shortKey.${command}.enable`]: false,
       })
       return true
     } else {
@@ -116,7 +109,7 @@ class ShortKeyHandler {
         return false
       } else {
         picgo.saveConfig({
-          [`settings.shortKey.${command}.enable`]: true
+          [`settings.shortKey.${command}.enable`]: true,
         })
         globalShortcut.register(item.key, () => {
           this.handler(command)
@@ -132,7 +125,7 @@ class ShortKeyHandler {
     if (globalShortcut.isRegistered(item.key)) return false
     globalShortcut.unregister(oldKey)
     picgo.saveConfig({
-      [`settings.shortKey.${command}.key`]: item.key
+      [`settings.shortKey.${command}.key`]: item.key,
     })
     globalShortcut.register(item.key, () => {
       this.handler(`${from}:${item.name}`)
@@ -183,7 +176,7 @@ class ShortKeyHandler {
       .map(command => {
         return {
           command,
-          key: commands[command].key
+          key: commands[command].key,
         }
       }) as IKeyCommandType[]
     keyList.forEach(item => {

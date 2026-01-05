@@ -2,8 +2,6 @@ import crypto from 'node:crypto'
 
 import axios from 'axios'
 
-import type { IStringKeyMap } from '#/types/types'
-
 const AUTH_KEY_VALUE_RE = /(\w+)=["']?([^'"]{1,10000})["']?/
 let NC = 0
 const NC_PAD = '00000000'
@@ -17,7 +15,7 @@ export function digestAuthHeader(
   uri: string,
   wwwAuthenticate: string,
   username: string,
-  password: string
+  password: string,
 ) {
   const parts = wwwAuthenticate.split(',')
   const opts = {} as IStringKeyMap

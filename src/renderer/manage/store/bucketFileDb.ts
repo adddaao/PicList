@@ -1,7 +1,5 @@
 import Dexie, { Table } from 'dexie'
 
-import type { IStringKeyMap } from '#/types/types'
-
 /*
  * create a database for bucket file cache
  *database name: bucketFileDb
@@ -46,7 +44,7 @@ export class FileCacheDb extends Dexie {
       'smms',
       'tcyun',
       'upyun',
-      'webdavplist'
+      'webdavplist',
     ]
 
     const tableNamesMap = tableNames.reduce((acc, cur) => {

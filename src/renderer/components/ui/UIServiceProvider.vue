@@ -20,7 +20,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref, useTemplateRef } from 'vue'
 
 import useConfirm, { type ConfirmOptions } from '@/hooks/useConfirm'
 import useMessage from '@/hooks/useMessage'
@@ -28,7 +28,7 @@ import useMessage from '@/hooks/useMessage'
 import ConfirmMessageBox from './ConfirmMessageBox.vue'
 import MessageToast from './MessageToast.vue'
 
-const messageRef = ref<InstanceType<typeof MessageToast> | null>(null)
+const messageRef = useTemplateRef('messageRef')
 const confirmVisible = ref(false)
 const confirmOptions = reactive<ConfirmOptions>({
   message: '',
@@ -37,7 +37,7 @@ const confirmOptions = reactive<ConfirmOptions>({
   confirmButtonText: 'Confirm',
   cancelButtonText: 'Cancel',
   showClose: true,
-  center: false
+  center: false,
 })
 
 let confirmResolve: ((value: boolean) => void) | null = null
@@ -67,7 +67,7 @@ const showConfirm = (options: ConfirmOptions): Promise<boolean> => {
       cancelButtonText: 'Cancel',
       showClose: true,
       center: false,
-      ...options
+      ...options,
     })
     confirmResolve = resolve
     confirmVisible.value = true
@@ -75,27 +75,26 @@ const showConfirm = (options: ConfirmOptions): Promise<boolean> => {
 }
 
 onMounted(() => {
-  // Initialize message service
   const { setMessageService } = useMessage()
   if (messageRef.value) {
     setMessageService({
       success: messageRef.value.success,
       error: messageRef.value.error,
       warning: messageRef.value.warning,
-      info: messageRef.value.info
+      info: messageRef.value.info,
     })
   }
 
   // Initialize confirm service
   const { setConfirmService } = useConfirm()
   setConfirmService({
-    confirm: showConfirm
+    confirm: showConfirm,
   })
 })
 </script>
 
 <script lang="ts">
 export default {
-  name: 'UIServiceProvider'
+  name: 'UIServiceProvider',
 }
 </script>

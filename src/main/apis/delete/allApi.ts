@@ -1,4 +1,3 @@
-import type { IStringKeyMap } from '#/types/types'
 import AlistApi from '~/apis/delete/alist'
 import AlistplistApi from '~/apis/delete/alistplist'
 import AliyunApi from '~/apis/delete/aliyun'
@@ -37,7 +36,7 @@ const apiMap: IStringKeyMap = {
   smms: SmmsApi,
   tcyun: TcyunApi,
   upyun: UpyunApi,
-  webdavplist: WebdavApi
+  webdavplist: WebdavApi,
 }
 
 export default class ALLApi {

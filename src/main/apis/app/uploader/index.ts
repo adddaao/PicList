@@ -11,7 +11,6 @@ import fs from 'fs-extra'
 import type { IPicGo } from 'piclist'
 import writeFile from 'write-file-atomic'
 
-import type { ImgInfo, IUploadOption } from '#/types/types'
 import { GET_RENAME_FILE_NAME, RENAME_FILE_NAME } from '~/events/constant'
 import { T as $t } from '~/i18n'
 import { getClipboardFilePath, showNotification } from '~/utils/common'
@@ -53,7 +52,7 @@ class Uploader {
       if (db.get(configPaths.settings.uploadNotification)) {
         const notification = new Notification({
           title: $t('UPLOAD_PROGRESS'),
-          body: $t('UPLOADING')
+          body: $t('UPLOADING'),
         })
         notification.show()
       }
@@ -85,10 +84,10 @@ class Uploader {
                 name = await waitForRename(window, window.webContents.id)
               }
               item.fileName = name || fileName
-            })
+            }),
           )
         }
-      }
+      },
     })
   }
 
@@ -163,7 +162,7 @@ class Uploader {
         showNotification({
           title: $t('UPLOAD_FAILED'),
           body: util.format(e.stack),
-          clickToCopy: true
+          clickToCopy: true,
         })
       }, 500)
       return false
@@ -186,7 +185,7 @@ class Uploader {
         showNotification({
           title: $t('UPLOAD_FAILED'),
           body: util.format(e.stack),
-          clickToCopy: true
+          clickToCopy: true,
         })
       }, 500)
       return false

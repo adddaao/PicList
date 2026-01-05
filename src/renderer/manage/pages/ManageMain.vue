@@ -36,7 +36,7 @@
     <!-- Main Content Card -->
     <div class="manage-card main-card">
       <div class="main-layout">
-        <div ref="sidebar" class="sidebar" :style="{ width: sidebarWidth + 'px' }">
+        <div class="sidebar" :style="{ width: sidebarWidth + 'px' }">
           <div class="sidebar-header">
             <h3 class="sidebar-title">
               {{ menuTitleMap[currentPicBedName] }}
@@ -92,7 +92,7 @@
           <div class="resize-line" />
         </div>
 
-        <div ref="contentArea" class="content-area">
+        <div class="content-area">
           <router-view />
         </div>
       </div>
@@ -265,7 +265,7 @@ import {
   HomeIcon,
   PlusIcon,
   SettingsIcon,
-  XIcon
+  XIcon,
 } from 'lucide-vue-next'
 import { computed, onBeforeMount, reactive, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -276,7 +276,6 @@ import { useManageStore } from '@/manage/store/manageStore'
 import { supportedPicBedList } from '@/manage/utils/constants'
 import { newBucketConfig } from '@/manage/utils/newBucketConfig'
 import { IRPCActionType } from '@/utils/enum'
-import type { IStringKeyMap } from '#/types/types'
 
 const { t } = useI18n()
 const manageStore = useManageStore() as any
@@ -287,7 +286,6 @@ const message = useMessage()
 const currentAlias = ref(route.query.alias as string)
 const currentPicBedName = ref(route.query.picBedName as string)
 
-const contentArea = ref<HTMLElement>()
 const sidebarWidth = ref(160)
 const isResizing = ref(false)
 
@@ -354,7 +352,7 @@ watch(
       await getBucketList()
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 watch(sidebarWidth, () => {}, { immediate: false })
@@ -370,7 +368,7 @@ const urlMap: IStringKeyMap = {
   smms: 'https://smms.app',
   tcyun: 'https://console.cloud.tencent.com/cos',
   upyun: 'https://console.upyun.com',
-  webdavplist: 'https://baike.baidu.com/item/WebDAV/4610909'
+  webdavplist: 'https://baike.baidu.com/item/WebDAV/4610909',
 }
 
 const showNewIconList = ['aliyun', 'qiniu', 'tcyun', 's3plist']
@@ -390,7 +388,7 @@ const menuTitleMap: IStringKeyMap = {
   imgur: galleryT,
   github: repositoryT,
   webdavplist: '',
-  local: ''
+  local: '',
 }
 
 const openPicBedUrl = () => window.electron.sendRPC(IRPCActionType.OPEN_URL, urlMap[currentPagePicBedConfig.picBedName])
@@ -477,7 +475,7 @@ function handleSelectMenu(bucketName: string) {
     bucketConfig: bucketList.value[bucketName],
     cdnUrl: currentPicBedConfig.customUrl,
     baseDir: prefix,
-    webPath: currentPicBedConfig.webPath || ''
+    webPath: currentPicBedConfig.webPath || '',
   }
   currentSelectedBucket.value = bucketName
   router.push({
@@ -487,15 +485,15 @@ function handleSelectMenu(bucketName: string) {
       alias: currentAlias.value,
       picBedName: currentPicBedName.value,
       config: JSON.stringify(currentPagePicBedConfig),
-      allPicBedConfigure: JSON.stringify(allPicBedConfigure)
-    }
+      allPicBedConfigure: JSON.stringify(allPicBedConfigure),
+    },
   })
 }
 
 function switchPicBed(picBedAlias: string) {
   if (picBedAlias === 'main') {
     router.push({
-      path: '/main-page/manage-login-page'
+      path: '/main-page/manage-login-page',
     })
     return
   }
@@ -510,8 +508,8 @@ function switchPicBed(picBedAlias: string) {
         alias: picBedAlias,
         picBedName: allPicBedConfigure[picBedAlias].picBedName,
         config: JSON.stringify(allPicBedConfigure[picBedAlias]),
-        allPicBedConfigure: JSON.stringify(allPicBedConfigure)
-      }
+        allPicBedConfigure: JSON.stringify(allPicBedConfigure),
+      },
     })
   } else {
     currentAlias.value = picBedAlias
@@ -534,8 +532,8 @@ function openBucketPageSetting() {
       alias: currentAlias.value,
       picBedName: currentPicBedName.value,
       config: JSON.stringify(currentPagePicBedConfig),
-      allPicBedConfigure: JSON.stringify(allPicBedConfigure)
-    }
+      allPicBedConfigure: JSON.stringify(allPicBedConfigure),
+    },
   })
 }
 

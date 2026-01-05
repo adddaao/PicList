@@ -1,20 +1,19 @@
 import { defineStore } from 'pinia'
 
 import { getConfig } from '@/manage/utils/dataSender'
-import type { IStringKeyMap } from '#/types/types'
 
 export const useManageStore = defineStore('manageConfig', {
   state: () => {
     return {
-      config: {} as IStringKeyMap
+      config: {} as IStringKeyMap,
     }
   },
   actions: {
     async refreshConfig() {
       this.config = (await getConfig()) ?? {}
-    }
+    },
   },
-  persist: true
+  persist: true,
 })
 
 export const useFileTransferStore = defineStore('fileTransfer', {
@@ -22,7 +21,7 @@ export const useFileTransferStore = defineStore('fileTransfer', {
     return {
       fileTransferList: [] as IStringKeyMap[],
       success: false,
-      finished: false
+      finished: false,
     }
   },
   actions: {
@@ -44,8 +43,8 @@ export const useFileTransferStore = defineStore('fileTransfer', {
     },
     isSuccess() {
       return this.success
-    }
-  }
+    },
+  },
 })
 
 export const useDownloadFileTransferStore = defineStore('downloadFileTransfer', {
@@ -53,7 +52,7 @@ export const useDownloadFileTransferStore = defineStore('downloadFileTransfer', 
     return {
       downloadFileTransferList: [] as IStringKeyMap[],
       success: false,
-      finished: false
+      finished: false,
     }
   },
   actions: {
@@ -75,6 +74,6 @@ export const useDownloadFileTransferStore = defineStore('downloadFileTransfer', 
     },
     isSuccess() {
       return this.success
-    }
-  }
+    },
+  },
 })

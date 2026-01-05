@@ -22,5 +22,5 @@ export const picBedsCanbeDeleted = [
   'smms',
   'tcyun',
   'upyun',
-  'webdavplist'
+  'webdavplist',
 ]

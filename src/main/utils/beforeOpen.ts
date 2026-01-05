@@ -6,12 +6,11 @@ import { dbPathChecker } from '@core/datastore/dbChecker'
 import fs from 'fs-extra'
 import yaml from 'js-yaml'
 
-import type { ILocales } from '#/types/i18n'
 import { i18nManager } from '~/i18n'
 
 const configPath = dbPathChecker()
 const CONFIG_DIR = path.dirname(configPath)
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const dirname = path.dirname(fileURLToPath(import.meta.url))
 
 function beforeOpen() {
   if (process.platform === 'darwin') {
@@ -35,7 +34,7 @@ function copyFileOutsideOfElectronAsar(sourceInAsarArchive: string, destOutsideA
       fs.readdirSync(sourceInAsarArchive).forEach(function (fileOrFolderName) {
         copyFileOutsideOfElectronAsar(
           `${sourceInAsarArchive}/${fileOrFolderName}`,
-          `${destOutsideAsarArchive}/${fileOrFolderName}`
+          `${destOutsideAsarArchive}/${fileOrFolderName}`,
         )
       })
     }
@@ -50,9 +49,9 @@ function resolveMacWorkFlow() {
   try {
     copyFileOutsideOfElectronAsar(
       path
-        .join(__dirname, '../../resources', 'Upload pictures with PicList.workflow')
+        .join(dirname, '../../resources', 'Upload pictures with PicList.workflow')
         .replace('app.asar', 'app.asar.unpacked'),
-      dest
+      dest,
     )
   } catch (e) {
     console.log(e)
@@ -93,8 +92,8 @@ function resolveClipboardImageGenerator() {
 
     return files.map(item => {
       return {
-        origin: path.join(__dirname, '../../resources', item).replace('app.asar', 'app.asar.unpacked'),
-        dest: path.join(CONFIG_DIR, item)
+        origin: path.join(dirname, '../../resources', item).replace('app.asar', 'app.asar.unpacked'),
+        dest: path.join(CONFIG_DIR, item),
       }
     })
   }
@@ -110,7 +109,7 @@ function resolveOtherI18nFiles() {
   }
   i18nManager.setOutterI18nFolder(i18nFolder)
   const i18nFiles = fs.readdirSync(path.join(CONFIG_DIR, 'i18n'), {
-    withFileTypes: true
+    withFileTypes: true,
   })
   i18nFiles.forEach(item => {
     if (item.isFile() && item.name?.endsWith('.yml')) {

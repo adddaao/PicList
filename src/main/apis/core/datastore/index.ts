@@ -27,8 +27,8 @@ class ConfigStore {
         current: 'smms', // deprecated
         uploader: 'smms',
         smms: {
-          token: ''
-        }
+          token: '',
+        },
       })
     }
 
@@ -37,7 +37,7 @@ class ConfigStore {
         enable: true,
         key: 'CommandOrControl+Alt+P',
         name: 'upload',
-        label: $t('QUICK_UPLOAD')
+        label: $t('QUICK_UPLOAD'),
       })
     }
     this.read()
@@ -107,8 +107,8 @@ class GalleryDB {
     console.log('init gallery db')
   }
 
-  static getInstance(): DBStore {
-    if (!GalleryDB.#instance) {
+  static getInstance(forceRefresh: boolean = false): DBStore {
+    if (!GalleryDB.#instance || forceRefresh) {
       GalleryDB.#instance = new DBStore(DB_PATH, 'gallery')
     }
     return GalleryDB.#instance

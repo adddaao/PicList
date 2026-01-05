@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
 
-import type { ISMMSConfig } from '#/types/types'
 import { deleteFailedLog, deleteLog } from '~/utils/deleteLog'
 
 interface IConfigMap {
@@ -23,13 +22,13 @@ export default class SmmsApi {
     try {
       const response: AxiosResponse = await axios.get(`${SmmsApi.#baseUrl}/delete/${hash}`, {
         headers: {
-          Authorization: token
+          Authorization: token,
         },
         params: {
           hash,
-          format: 'json'
+          format: 'json',
         },
-        timeout: 30000
+        timeout: 30000,
       })
       const ok = response.status === 200
       deleteLog(hash, 'Smms', ok)

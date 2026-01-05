@@ -1,30 +1,8 @@
 import type { IBuildInCompressOptions, IBuildInWaterMarkOptions } from 'piclist'
 
-import type {
-  IAliYunConfig,
-  IAwsS3PListUserConfig,
-  IGitHubConfig,
-  IImgurConfig,
-  ILocalConfig,
-  ILskyConfig,
-  IPicBedType,
-  IQiniuConfig,
-  IServerConfig,
-  ISftpPlistConfig,
-  IShortKeyConfig,
-  ISMMSConfig,
-  ISyncConfig,
-  ITcYunConfig,
-  IUploaderConfig,
-  IUpYunConfig,
-  IWebdavPlistConfig
-} from '#/types/types'
-
 export type manualPageOpenType = 'window' | 'browser'
 
-interface IPicGoPlugins {
-  [key: `picgo-plugin-${string}`]: boolean
-}
+type IPicGoPlugins = Record<`picgo-plugin-${string}`, boolean>
 
 export interface IConfigStruct {
   picBed: {
@@ -48,9 +26,7 @@ export interface IConfigStruct {
     [others: string]: any
   }
   settings: {
-    shortKey: {
-      [key: string]: IShortKeyConfig
-    }
+    shortKey: Record<string, IShortKeyConfig>
     isAlwaysForceReload: boolean
     logLevel: string[]
     logPath: string
@@ -133,12 +109,12 @@ export const configPaths = {
     secondUploaderConfig: 'picBed.secondUploaderConfig',
     proxy: 'picBed.proxy',
     transformer: 'picBed.transformer',
-    list: 'picBed.list'
+    list: 'picBed.list',
   },
   settings: {
     shortKey: {
       _path: 'settings.shortKey',
-      'picgo:upload': 'settings.shortKey[picgo:upload]'
+      'picgo:upload': 'settings.shortKey[picgo:upload]',
     },
     isAlwaysForceReload: 'settings.isAlwaysForceReload',
     logLevel: 'settings.logLevel',
@@ -194,7 +170,7 @@ export const configPaths = {
     autoImport: 'settings.autoImport',
     autoImportPicBed: 'settings.autoImportPicBed',
     galleryPicBedFilter: 'settings.galleryPicBedFilter',
-    enableSecondUploader: 'settings.enableSecondUploader'
+    enableSecondUploader: 'settings.enableSecondUploader',
   },
   needReload: 'needReload',
   picgoPlugins: 'picgoPlugins',
@@ -203,8 +179,8 @@ export const configPaths = {
     compress: 'buildIn.compress',
     watermark: 'buildIn.watermark',
     rename: 'buildIn.rename',
-    skipProcess: 'buildIn.skipProcess'
+    skipProcess: 'buildIn.skipProcess',
   },
   debug: 'debug',
-  PICGO_ENV: 'PICGO_ENV'
+  PICGO_ENV: 'PICGO_ENV',
 }

@@ -8,7 +8,6 @@ import { app } from 'electron'
 import fs from 'fs-extra'
 import multer from 'multer'
 
-import type { ErrnoException, IObj, IServerConfig } from '#/types/types'
 import routers from '~/server/routerManager'
 import { ensureHTTPLink, handleResponse } from '~/server/utils'
 import { configPaths } from '~/utils/configPaths'
@@ -21,20 +20,20 @@ const serverTempDir = path.join(appPath, 'serverTemp')
 fs.ensureDirSync(serverTempDir)
 
 const multerStorage = multer.diskStorage({
-  destination: function (_req: any, _file: any, cb: (arg0: null, arg1: any) => void) {
+  destination(_req: any, _file: any, cb: (arg0: null, arg1: any) => void) {
     fs.ensureDirSync(serverTempDir)
     cb(null, serverTempDir)
   },
-  filename: function (_req: any, file: { originalname: any }, cb: (arg0: null, arg1: any) => void) {
+  filename(_req: any, file: { originalname: any }, cb: (arg0: null, arg1: any) => void) {
     if (!/[^\u0000-\u00ff]/.test(file.originalname)) {
       file.originalname = Buffer.from(file.originalname, 'latin1').toString('utf8')
     }
     cb(null, file.originalname)
-  }
+  },
 })
 
 const uploadMulter = multer({
-  storage: multerStorage
+  storage: multerStorage,
 })
 
 class Server {
@@ -85,8 +84,8 @@ class Server {
         response,
         statusCode: 404,
         body: {
-          success: false
-        }
+          success: false,
+        },
       })
     } else {
       const remoteAddress = request.socket.remoteAddress || 'unknown'
@@ -109,8 +108,8 @@ class Server {
               response,
               body: {
                 success: false,
-                message: 'Error processing formData'
-              }
+                message: 'Error processing formData',
+              },
             })
           }
           // @ts-expect-error since the multer type is not correct
@@ -121,7 +120,7 @@ class Server {
             handler({
               list,
               response,
-              urlparams: urlSP
+              urlparams: urlSP,
             })
           }
         })
@@ -140,8 +139,8 @@ class Server {
               response,
               body: {
                 success: false,
-                message: 'Not sending data in JSON format'
-              }
+                message: 'Not sending data in JSON format',
+              },
             })
           }
           logger.info('[PicList Server] get the request', body)
@@ -149,7 +148,7 @@ class Server {
           handler!({
             ...postObj,
             response,
-            urlparams: urlSP
+            urlparams: urlSP,
           })
         })
       }
@@ -167,7 +166,7 @@ class Server {
       if (handler) {
         handler({
           response,
-          urlparams: query ? new URLSearchParams(query) : undefined
+          urlparams: query ? new URLSearchParams(query) : undefined,
         })
       }
     }
@@ -186,7 +185,7 @@ class Server {
           await axios.post(ensureHTTPLink(`${this.#config.host}:${port}/heartbeat`))
           logger.info(`[PicList Server] server is already running at ${port}`)
           this.shutdown(true)
-        } catch (e) {
+        } catch (_e) {
           logger.warn(`[PicList Server] ${port} is busy, trying with port ${(port as number) + 1}`)
           // fix a bug: not write an increase number to config file
           // to solve the auto number problem

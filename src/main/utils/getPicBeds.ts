@@ -1,6 +1,5 @@
 import picgo from '@core/picgo'
 
-import type { IPicBedType } from '#/types/types'
 import { configPaths } from '~/utils/configPaths'
 
 const getPicBeds = () => {
@@ -12,7 +11,7 @@ const getPicBeds = () => {
       return {
         type: item,
         name: picgo.helper.uploader.get(item)!.name || item,
-        visible: visible ? visible.visible : true
+        visible: visible ? visible.visible : true,
       }
     })
     .sort(a => {

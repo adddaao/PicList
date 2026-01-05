@@ -5,7 +5,6 @@ import picgo from '@core/picgo'
 import logger from '@core/picgo/logger'
 import fs from 'fs-extra'
 
-import type { IStringKeyMap } from '#/types/types'
 import { encodeFilePath } from '~/utils/common'
 import { configPaths } from '~/utils/configPaths'
 
@@ -76,7 +75,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
             font-size: 13px;
@@ -84,14 +83,14 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             color: #212121;
             line-height: 1.4;
         }
-        
+
         .window {
             height: 100vh;
             display: flex;
             flex-direction: column;
             border: 1px solid #dadce0;
         }
-        
+
         .titlebar {
             height: 32px;
             background: #f8f9fa;
@@ -103,7 +102,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             font-size: 13px;
             font-weight: 500;
         }
-        
+
         .toolbar {
             height: 40px;
             background: #ffffff;
@@ -113,7 +112,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             padding: 0 12px;
             gap: 8px;
         }
-        
+
         .nav-button {
             width: 24px;
             height: 24px;
@@ -127,17 +126,17 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             font-size: 12px;
             color: #5f6368;
         }
-        
+
         .nav-button:hover {
             background: #f8f9fa;
             border-color: #c4c7c5;
         }
-        
+
         .nav-button:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-        
+
         .address-bar {
             flex: 1;
             height: 24px;
@@ -149,12 +148,12 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             font-size: 13px;
             color: #202124;
         }
-        
+
         .address-bar:focus {
             outline: none;
             border-color: #1a73e8;
         }
-        
+
         .search-box {
             width: 200px;
             height: 24px;
@@ -164,24 +163,24 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             border-radius: 2px;
             font-size: 13px;
         }
-        
+
         .search-box:focus {
             outline: none;
             border-color: #1a73e8;
         }
-        
+
         .main-content {
             flex: 1;
             display: flex;
             overflow: hidden;
         }
-        
+
         .file-list-container {
             flex: 1;
             overflow: auto;
             background: #ffffff;
         }
-        
+
         .list-header {
             height: 24px;
             background: #f8f9fa;
@@ -195,27 +194,27 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             text-transform: uppercase;
             letter-spacing: 0.8px;
         }
-        
+
         .header-name {
             flex: 1;
             min-width: 200px;
         }
-        
+
         .header-modified {
             width: 140px;
             padding: 0 8px;
         }
-        
+
         .header-size {
             width: 80px;
             text-align: right;
             padding: 0 8px;
         }
-        
+
         .file-list {
             user-select: none;
         }
-        
+
         .file-item {
             height: 20px;
             display: flex;
@@ -226,22 +225,22 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             border-bottom: 1px solid transparent;
             cursor: pointer;
         }
-        
+
         .file-item:hover {
             background: #f8f9fa;
         }
-        
+
         .file-item:active {
             background: #e8f0fe;
         }
-        
+
         .file-icon {
             width: 16px;
             height: 16px;
             margin-right: 8px;
             flex-shrink: 0;
         }
-        
+
         .file-name {
             flex: 1;
             min-width: 0;
@@ -250,7 +249,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             text-overflow: ellipsis;
             font-size: 13px;
         }
-        
+
         .file-modified {
             width: 140px;
             padding: 0 8px;
@@ -258,7 +257,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             color: #5f6368;
             white-space: nowrap;
         }
-        
+
         .file-size {
             width: 80px;
             text-align: right;
@@ -267,20 +266,20 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             color: #5f6368;
             white-space: nowrap;
         }
-        
+
         .directory .file-name {
             font-weight: 500;
         }
-        
+
         .parent-dir {
             border-bottom: 1px solid #e8eaed;
         }
-        
+
         .parent-dir .file-name {
             color: #1a73e8;
             font-weight: 500;
         }
-        
+
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -289,14 +288,14 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             height: 200px;
             color: #5f6368;
         }
-        
+
         .empty-state-icon {
             width: 48px;
             height: 48px;
             margin-bottom: 16px;
             opacity: 0.5;
         }
-        
+
         .status-bar {
             height: 22px;
             background: #f8f9fa;
@@ -307,16 +306,16 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             font-size: 12px;
             color: #5f6368;
         }
-        
+
         @media (max-width: 768px) {
             .header-modified, .file-modified {
                 display: none;
             }
-            
+
             .header-size, .file-size {
                 width: 60px;
             }
-            
+
             .search-box {
                 width: 150px;
             }
@@ -328,7 +327,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
         <div class="titlebar">
             File Browser - ${requestPath || 'Home'}
         </div>
-        
+
         <div class="toolbar">
             <button class="nav-button" onclick="history.back()" title="Back">←</button>
             <button class="nav-button" onclick="history.forward()" title="Forward">→</button>
@@ -336,7 +335,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
             <input type="text" class="address-bar" value="${requestPath || '/'}" readonly>
             <input type="text" class="search-box" placeholder="Search..." id="searchBox">
         </div>
-        
+
         <div class="main-content">
             <div class="file-list-container">
                 <div class="list-header">
@@ -344,7 +343,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
                     <div class="header-modified">Date modified</div>
                     <div class="header-size">Size</div>
                 </div>
-                
+
                 <div class="file-list" id="fileList">
   `
 
@@ -383,13 +382,13 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
         ? new Date(fileInfo.mtime).toLocaleDateString('en-US', {
             year: '2-digit',
             month: 'numeric',
-            day: 'numeric'
+            day: 'numeric',
           }) +
           ' ' +
           new Date(fileInfo.mtime).toLocaleTimeString('en-US', {
             hour: 'numeric',
             minute: '2-digit',
-            hour12: true
+            hour12: true,
           })
         : ''
 
@@ -410,18 +409,18 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
                 </div>
             </div>
         </div>
-        
+
         <div class="status-bar">
             ${itemCount} items
         </div>
     </div>
-    
+
     <script>
         // Search functionality
         document.getElementById('searchBox').addEventListener('input', function(e) {
             const searchTerm = e.target.value.toLowerCase();
             const fileItems = document.querySelectorAll('.file-item:not(.parent-dir)');
-            
+
             fileItems.forEach(item => {
                 const fileName = item.querySelector('.file-name').textContent.toLowerCase();
                 if (fileName.includes(searchTerm)) {
@@ -431,7 +430,7 @@ function generateDirectoryListingHtml(files: any[], requestPath: string, fullPat
                 }
             });
         });
-        
+
         // Handle keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (e.key === 'F5') {
@@ -454,7 +453,7 @@ function sortFiles(files: string[], fullPath: string): any[] {
       let stats
       try {
         stats = fs.statSync(filePath)
-      } catch (err) {
+      } catch (_e) {
         stats = null
       }
 
@@ -462,7 +461,7 @@ function sortFiles(files: string[], fullPath: string): any[] {
         name: file,
         isDirectory: stats ? stats.isDirectory() : false,
         size: stats ? stats.size : 0,
-        mtime: stats ? stats.mtime : null
+        mtime: stats ? stats.mtime : null,
       }
     })
     .sort((a, b) => {
@@ -474,25 +473,25 @@ function sortFiles(files: string[], fullPath: string): any[] {
     })
 }
 
-function generateErrorPage(errorCode: number, errorMessage: string): string {
-  const errorDescriptions: { [key: number]: { title: string; description: string } } = {
+function generateErrorPage(errorCode: number, _e: string): string {
+  const errorDescriptions: Record<number, { title: string; description: string }> = {
     404: {
       title: 'Page Not Found',
-      description: 'The file or directory you are looking for could not be found.'
+      description: 'The file or directory you are looking for could not be found.',
     },
     500: {
       title: 'Server Error',
-      description: 'An internal server error occurred while processing your request.'
+      description: 'An internal server error occurred while processing your request.',
     },
     403: {
       title: 'Access Denied',
-      description: 'You do not have permission to access this resource.'
-    }
+      description: 'You do not have permission to access this resource.',
+    },
   }
 
   const error = errorDescriptions[errorCode] || {
     title: 'Unknown Error',
-    description: 'An unexpected error occurred.'
+    description: 'An unexpected error occurred.',
   }
 
   return `
@@ -508,7 +507,7 @@ function generateErrorPage(errorCode: number, errorMessage: string): string {
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -518,45 +517,44 @@ function generateErrorPage(errorCode: number, errorMessage: string): string {
             justify-content: center;
             padding: 20px;
         }
-        
+
         .error-container {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(10px);
             padding: 60px 40px;
             text-align: center;
             max-width: 500px;
             width: 100%;
         }
-        
+
         .error-icon {
             font-size: 80px;
             margin-bottom: 20px;
             opacity: 0.8;
         }
-        
+
         .error-code {
             font-size: 48px;
             font-weight: 700;
             color: #e74c3c;
             margin-bottom: 10px;
         }
-        
+
         .error-title {
             font-size: 24px;
             font-weight: 600;
             color: #2c3e50;
             margin-bottom: 15px;
         }
-        
+
         .error-description {
             font-size: 16px;
             color: #7f8c8d;
             line-height: 1.6;
             margin-bottom: 30px;
         }
-        
+
         .back-button {
             display: inline-block;
             padding: 12px 24px;
@@ -567,25 +565,25 @@ function generateErrorPage(errorCode: number, errorMessage: string): string {
             font-weight: 500;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-        
+
         .back-button:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
         }
-        
+
         @media (max-width: 480px) {
             .error-container {
                 padding: 40px 30px;
             }
-            
+
             .error-icon {
                 font-size: 60px;
             }
-            
+
             .error-code {
                 font-size: 36px;
             }
-            
+
             .error-title {
                 font-size: 20px;
             }
@@ -622,7 +620,7 @@ function serveFile(res: http.ServerResponse, filePath: fs.PathLike) {
   const readStream = fs.createReadStream(filePath)
 
   const ext = path.extname(filePath.toString()).toLowerCase()
-  const contentTypes: { [key: string]: string } = {
+  const contentTypes: Record<string, string> = {
     '.html': 'text/html',
     '.css': 'text/css',
     '.js': 'application/javascript',
@@ -634,7 +632,7 @@ function serveFile(res: http.ServerResponse, filePath: fs.PathLike) {
     '.svg': 'image/svg+xml',
     '.pdf': 'application/pdf',
     '.txt': 'text/plain',
-    '.md': 'text/markdown'
+    '.md': 'text/markdown',
   }
 
   const contentType = contentTypes[ext] || 'application/octet-stream'
@@ -662,7 +660,7 @@ class WebServer {
       enableWebServer: picgo.getConfig<boolean>(configPaths.settings.enableWebServer) || false,
       webServerHost: picgo.getConfig<string>(configPaths.settings.webServerHost) || '0.0.0.0',
       webServerPort: picgo.getConfig<number>(configPaths.settings.webServerPort) || 37777,
-      webServerPath: picgo.getConfig<string>(configPaths.settings.webServerPath) || defaultPath
+      webServerPath: picgo.getConfig<string>(configPaths.settings.webServerPath) || defaultPath,
     }
   }
 
@@ -678,7 +676,7 @@ class WebServer {
         } else {
           serveFile(res, filePath)
         }
-      } catch (err) {
+      } catch (_e) {
         logger.error(`File not found: ${filePath}`)
         res.writeHead(404, { 'Content-Type': 'text/html' })
         res.end(generateErrorPage(404, 'The requested file or directory was not found'))
@@ -694,9 +692,9 @@ class WebServer {
           this.#config.webServerHost,
           () => {
             logger.info(
-              `Web server is running at http://${this.#config.webServerHost}:${this.#config.webServerPort}, root path is ${this.#config.webServerPath}`
+              `Web server is running at http://${this.#config.webServerHost}:${this.#config.webServerPort}, root path is ${this.#config.webServerPath}`,
             )
-          }
+          },
         )
         .on('error', err => {
           logger.error(err)

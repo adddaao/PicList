@@ -1,79 +1,130 @@
 <template>
-  <div class="config-container">
-    <!-- Header Card -->
-    <div class="config-card header-card">
-      <div class="card-header">
-        <h1 class="page-title">
-          {{ t('pages.uploaderConfig.title') }}
-        </h1>
-      </div>
-    </div>
+  <div class="config-page">
+    <!-- Ambient Background -->
+    <div class="ambient-bg" />
 
-    <!-- Config Items Card -->
-    <div class="config-card main-card">
-      <div class="config-grid">
-        <div
-          v-for="item in curConfigList"
-          :key="item._id"
-          :class="`config-item ${defaultConfigId === item._id ? 'selected' : ''}`"
-          @click="() => selectItem(item._id)"
-        >
-          <div class="config-content">
-            <div class="config-name">
-              {{ item._configName }}
-            </div>
-            <div class="config-update-time">
-              {{ formatTime(item._updatedAt) }}
-            </div>
-            <div v-if="defaultConfigId === item._id" class="default-badge">
-              {{ t('pages.uploaderConfig.selected') }}
-            </div>
+    <div class="config-container">
+      <!-- Hero Header Section -->
+      <header class="page-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <Settings2 :size="28" :stroke-width="1.5" />
           </div>
-          <div class="config-actions">
-            <button
-              class="action-btn edit-btn"
-              :title="t('pages.uploaderConfig.edit')"
-              @click.stop="openEditPage(item._id)"
-            >
-              <Edit :size="16" />
-            </button>
-            <button
-              class="action-btn delete-btn"
-              :class="curConfigList.length <= 1 ? 'disabled' : ''"
-              :title="t('pages.uploaderConfig.delete')"
-              :disabled="curConfigList.length <= 1"
-              @click.stop="() => deleteConfig(item._id)"
-            >
-              <Trash2 :size="16" />
-            </button>
+          <div class="header-text">
+            <h1 class="page-title">
+              {{ `${type} ${t('pages.uploaderConfig.title')}` }}
+            </h1>
+            <p class="page-subtitle">
+              {{ t('pages.uploaderConfig.subtitle', { count: curConfigList.length }) }}
+            </p>
           </div>
         </div>
-
-        <!-- Add New Config Button -->
-        <div class="config-item config-item-add" @click="addNewConfig">
-          <div class="add-content">
-            <Plus :size="32" />
-            <span class="add-text">{{ t('pages.uploaderConfig.addNew') }}</span>
-          </div>
+        <div class="header-actions">
+          <button
+            class="btn btn-primary btn-glow"
+            :disabled="store?.state.defaultPicBed === type"
+            @click="setDefaultPicBed(type)"
+          >
+            <Star :size="16" />
+            <span>{{ t('pages.uploaderConfig.setAsDefault') }}</span>
+          </button>
         </div>
-      </div>
-    </div>
+      </header>
 
-    <!-- Actions Card -->
-    <div class="config-card actions-card">
-      <div class="card-actions">
-        <button class="primary-button" :disabled="store?.state.defaultPicBed === type" @click="setDefaultPicBed(type)">
-          <DatabaseIcon :size="16" />
-          <span>{{ t('pages.uploaderConfig.setAsDefault') }}</span>
-        </button>
-      </div>
+      <!-- Main Content Area -->
+      <main class="main-content">
+        <!-- Config Grid -->
+        <TransitionGroup name="config-list" tag="div" class="config-grid">
+          <!-- Config Items -->
+          <article
+            v-for="(item, index) in curConfigList"
+            :key="item._id"
+            class="config-card"
+            :class="{ 'is-active': defaultConfigId === item._id }"
+            :style="{ '--delay': `${index * 50}ms` }"
+            @click="() => selectItem(item._id)"
+          >
+            <div v-if="defaultConfigId === item._id" class="active-indicator">
+              <div class="indicator-dot" />
+            </div>
+
+            <!-- Card Header -->
+            <div class="card-header">
+              <div class="config-icon">
+                <Cloud :size="20" />
+              </div>
+              <div class="card-actions">
+                <button class="action-btn" :title="t('pages.uploaderConfig.edit')" @click.stop="openEditPage(item._id)">
+                  <Pencil :size="14" />
+                </button>
+                <button
+                  class="action-btn"
+                  :title="t('pages.uploaderConfig.duplicate')"
+                  @click.stop="() => duplicateConfig(item._id)"
+                >
+                  <Copy :size="14" />
+                </button>
+                <button
+                  class="action-btn action-btn-danger"
+                  :class="{ disabled: curConfigList.length <= 1 }"
+                  :title="t('pages.uploaderConfig.delete')"
+                  :disabled="curConfigList.length <= 1"
+                  @click.stop="() => deleteConfig(item._id)"
+                >
+                  <Trash2 :size="14" />
+                </button>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+              <h3 class="config-name">{{ item._configName }}</h3>
+              <div class="config-meta">
+                <Clock :size="12" />
+                <span>{{ formatTime(item._updatedAt) }}</span>
+              </div>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer">
+              <div v-if="defaultConfigId === item._id" class="status-badge active">
+                <CheckCircle2 :size="14" />
+                <span>{{ t('pages.uploaderConfig.selected') }}</span>
+              </div>
+              <div v-else class="status-badge inactive">
+                <Circle :size="14" />
+                <span>{{ t('pages.uploaderConfig.clickToSelect') }}</span>
+              </div>
+            </div>
+
+            <div class="card-glow" />
+          </article>
+
+          <article
+            key="add-new"
+            class="config-card config-card-add"
+            :style="{ '--delay': `${curConfigList.length * 50}ms` }"
+            @click="addNewConfig"
+          >
+            <div class="add-content">
+              <div class="add-icon">
+                <Plus :size="24" />
+              </div>
+              <div class="add-text">
+                <span class="add-title">{{ t('pages.uploaderConfig.addNew') }}</span>
+              </div>
+            </div>
+            <div class="card-glow" />
+          </article>
+        </TransitionGroup>
+      </main>
     </div>
   </div>
 </template>
 
 <script lang="ts" setup>
 import dayjs from 'dayjs'
-import { DatabaseIcon, Edit, Plus, Trash2 } from 'lucide-vue-next'
+import { CheckCircle2, Circle, Clock, Cloud, Copy, Pencil, Plus, Settings2, Star, Trash2 } from 'lucide-vue-next'
 import { onBeforeMount, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
@@ -82,10 +133,11 @@ import useConfirm from '@/hooks/useConfirm'
 import useMessage from '@/hooks/useMessage'
 import { useStore } from '@/hooks/useStore'
 import { PICBEDS_PAGE, UPLOADER_CONFIG_PAGE } from '@/router/config'
+import $bus from '@/utils/bus'
 import { configPaths } from '@/utils/configPaths'
+import { SHOW_INPUT_BOX, SHOW_INPUT_BOX_RESPONSE } from '@/utils/constant'
 import { saveConfig } from '@/utils/dataSender'
 import { IRPCActionType } from '@/utils/enum'
-import type { IStringKeyMap, IUploaderConfigItem } from '#/types/types'
 
 const { t } = useI18n()
 const message = useMessage()
@@ -103,7 +155,7 @@ async function selectItem(id: string) {
   if (store?.state.defaultPicBed === type.value) {
     window.electron.sendRPC(
       IRPCActionType.TRAY_SET_TOOL_TIP,
-      `${type.value} ${curConfigList.value.find(item => item._id === id)?._configName || ''}`
+      `${type.value} ${curConfigList.value.find(item => item._id === id)?._configName || ''}`,
     )
   }
   defaultConfigId.value = id
@@ -125,7 +177,7 @@ onBeforeMount(() => {
 async function getCurrentConfigList() {
   const configList = await window.electron.triggerRPC<IUploaderConfigItem>(
     IRPCActionType.PICBED_GET_CONFIG_LIST,
-    type.value
+    type.value,
   )
   curConfigList.value = configList?.configList ?? []
   defaultConfigId.value = configList?.defaultId ?? ''
@@ -136,16 +188,59 @@ function openEditPage(configId: string) {
     name: PICBEDS_PAGE,
     params: {
       type: type.value,
-      configId
+      configId,
     },
     query: {
-      defaultConfigId: defaultConfigId.value
-    }
+      defaultConfigId: defaultConfigId.value,
+    },
   })
 }
 
 function formatTime(time: number): string {
   return dayjs(time).format('YYYY-MM-DD HH:mm')
+}
+
+async function duplicateConfig(id: string) {
+  const originalConfig = curConfigList.value.find(item => item._id === id)
+  if (!originalConfig) return
+
+  return new Promise<void>(resolve => {
+    $bus.emit(SHOW_INPUT_BOX, {
+      title: t('pages.uploaderConfig.duplicateTitle'),
+      placeholder: t('pages.uploaderConfig.duplicatePlaceholder'),
+      value: `${originalConfig._configName} - ${t('pages.uploaderConfig.copy')}`,
+    })
+
+    const handleResponse = async (newName: string) => {
+      $bus.off(SHOW_INPUT_BOX_RESPONSE, handleResponse)
+
+      if (!newName) {
+        resolve()
+        return
+      }
+
+      try {
+        const res = await window.electron.triggerRPC<IUploaderConfigItem>(
+          IRPCActionType.PICBED_DUPLICATE_CONFIG,
+          type.value,
+          id,
+          newName,
+        )
+        if (!res) {
+          resolve()
+          return
+        }
+        curConfigList.value = res.configList
+        defaultConfigId.value = res.defaultId
+        message.success(t('pages.uploaderConfig.duplicateSuccess'))
+      } catch (error) {
+        message.error(t('pages.uploaderConfig.duplicateError'))
+      }
+      resolve()
+    }
+
+    $bus.on(SHOW_INPUT_BOX_RESPONSE, handleResponse)
+  })
 }
 
 async function deleteConfig(id: string) {
@@ -155,7 +250,7 @@ async function deleteConfig(id: string) {
     type: 'warning',
     confirmButtonText: t('common.confirm'),
     cancelButtonText: t('common.cancel'),
-    center: true
+    center: true,
   })
   if (!result) return
   const res = await window.electron.triggerRPC<IUploaderConfigItem>(IRPCActionType.PICBED_DELETE_CONFIG, type.value, id)
@@ -170,15 +265,15 @@ function addNewConfig() {
     name: PICBEDS_PAGE,
     params: {
       type: type.value,
-      configId: ''
-    }
+      configId: '',
+    },
   })
 }
 
 function setDefaultPicBed(type: string) {
   saveConfig({
     [configPaths.picBed.current]: type,
-    [configPaths.picBed.uploader]: type
+    [configPaths.picBed.uploader]: type,
   })
 
   store?.setDefaultPicBed(type)
@@ -189,7 +284,7 @@ function setDefaultPicBed(type: string) {
 </script>
 <script lang="ts">
 export default {
-  name: 'UploaderConfigPage'
+  name: 'UploaderConfigPage',
 }
 </script>
 
